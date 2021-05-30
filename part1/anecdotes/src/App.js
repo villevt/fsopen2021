@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+const AnecdotePanel = ({anecdote, votes}) => <p>{anecdote}<br/> has {votes} votes</p>
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -11,10 +13,47 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0))
 
+  const mostVoted = () => {
+    let max = 0
+    let maxIdx = 0
+    let idx = 0
+
+    anecdotes.forEach(value => {
+      if (votes[idx] > max) {
+        max = votes[idx]
+        maxIdx = idx
+      }
+      idx++
+    })
+
+    return [anecdotes[maxIdx], max]
+  }
+
+  const voteCurrent = () => {
+    const copy = [...votes]
+    copy[selected] += 1
+    setVotes(copy)
+  }
+
+  const [mostVotedAnecdote, mostVotedVotes] = mostVoted()
+
+  const selectRandom = () => setSelected(Math.floor(Math.random() * anecdotes.length))
   return (
     <div>
-      {anecdotes[selected]}
+      <h1>Anecdote of the day</h1>
+      <AnecdotePanel anecdote={anecdotes[selected]} votes={votes[selected]} />
+
+      <button onClick={voteCurrent}>
+        Vote
+      </button>
+      <button onClick={selectRandom}>
+        Next anecdote
+      </button>
+
+      <h1>Anecdote with most votes</h1>
+      <AnecdotePanel anecdote={mostVotedAnecdote} votes={mostVotedVotes} />
     </div>
   )
 }
