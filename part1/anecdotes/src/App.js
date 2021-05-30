@@ -53,6 +53,7 @@ const App = () => {
   const [mostVotedAnecdote, mostVotedVotes] = mostVoted()
 
   const selectRandom = () => setSelected(Math.floor(Math.random() * anecdotes.length))
+  
   return (
     <div>
       <AnecdotePanel anecdote={anecdotes[selected]} header="Anecdote of the day" votes={votes[selected]} />
