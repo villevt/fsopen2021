@@ -1,6 +1,19 @@
 import React, { useState } from 'react'
 
-const AnecdotePanel = ({anecdote, votes}) => <p>{anecdote}<br/> has {votes} votes</p>
+const AnecdotePanel = ({header, anecdote, votes}) => (
+  <div>
+    <h1>
+      {header}
+    </h1>
+    <p>
+      {anecdote}
+      <br/> 
+      has {votes} votes
+    </p>
+  </div>
+)
+
+const Button = ({text, handleClick}) => <button onClick={handleClick}>{text}</button>
 
 const App = () => {
   const anecdotes = [
@@ -42,18 +55,10 @@ const App = () => {
   const selectRandom = () => setSelected(Math.floor(Math.random() * anecdotes.length))
   return (
     <div>
-      <h1>Anecdote of the day</h1>
-      <AnecdotePanel anecdote={anecdotes[selected]} votes={votes[selected]} />
-
-      <button onClick={voteCurrent}>
-        Vote
-      </button>
-      <button onClick={selectRandom}>
-        Next anecdote
-      </button>
-
-      <h1>Anecdote with most votes</h1>
-      <AnecdotePanel anecdote={mostVotedAnecdote} votes={mostVotedVotes} />
+      <AnecdotePanel anecdote={anecdotes[selected]} header="Anecdote of the day" votes={votes[selected]} />
+      <Button handleClick={voteCurrent} text="Vote" />
+      <Button handleClick={selectRandom} text="Next anecdote" />
+      <AnecdotePanel anecdote={mostVotedAnecdote} header="Anecdote with most votes" votes={mostVotedVotes} />
     </div>
   )
 }
