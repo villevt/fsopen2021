@@ -49,11 +49,11 @@ const App = () => {
     copy[selected] += 1
     setVotes(copy)
   }
+  
+  const selectRandom = () => setSelected(Math.floor(Math.random() * anecdotes.length))
 
   const [mostVotedAnecdote, mostVotedVotes] = mostVoted()
 
-  const selectRandom = () => setSelected(Math.floor(Math.random() * anecdotes.length))
-  
   return (
     <div>
       <AnecdotePanel anecdote={anecdotes[selected]} header="Anecdote of the day" votes={votes[selected]} />
