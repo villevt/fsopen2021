@@ -3,8 +3,6 @@ import axios from 'axios'
 
 const weather_api_key = process.env.REACT_APP_WEATHER_API_KEY
 
-console.log(weather_api_key)
-
 const Weather = ({country}) => {
     const [weather, setWeather] = useState()
 
