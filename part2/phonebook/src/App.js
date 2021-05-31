@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
+import axios from 'axios'
 
 import AddNumber from "./components/AddNumber"
 import Filter from "./components/Filter"
 import Numbers from "./components/Numbers"
 
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', number: '040-1234567' }
-  ]) 
-
+  const [persons, setPersons] = useState([{
+    name: "",
+    number: "",
+    id: 0
+  }]) 
   const [filter, setFilter] = useState(new RegExp(''))
+
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then(response=> {
+      setPersons(response.data)
+    })
+  }, [])
 
   const filterHandler = (event) => {
     const newFilter = new RegExp(`^${event.target.value.toLowerCase()}`)
