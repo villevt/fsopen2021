@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Number = ({person}) => (
-    <tr key={person.name}>
+    <tr>
         <td>{person.name}</td>
     </tr>
 )

@@ -5,8 +5,8 @@ import Number from "./Number"
 const Numbers = ({persons}) => (
     <table>
         <tbody>
-            {persons.map(person => 
-                <Number person={person} />
+            {persons.sort((a, b) => a.name < b.name ? -1 : 1).map(person => 
+                <Number key={person.name} person={person} />
             )}
         </tbody>
     </table>
