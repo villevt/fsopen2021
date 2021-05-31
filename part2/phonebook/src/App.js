@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import axios from 'axios'
+
+import numberService from "./services/numbers" 
 
 import AddNumber from "./components/AddNumber"
 import Filter from "./components/Filter"
@@ -14,9 +15,9 @@ const App = () => {
   const [filter, setFilter] = useState("")
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then(response=> {
-      setPersons(response.data)
-    })
+    numberService.getAll()
+      .then(response => setPersons(response))
+      .catch(error => alert(`Failed to retrieve numbers \n${error}`))
   }, [])
 
   const filterHandler = (event) => {
@@ -33,13 +34,13 @@ const App = () => {
     } else if (persons.some((value) => value.number === newNumber)) {
       alert (`${newNumber} is already in phonebook`)
     } else {
-      const copy = [...persons]
-      copy.push({
+      numberService.create({
         name: newName,
-        number: newNumber,
-        id: copy.length + 1
-      })
-      setPersons(copy)
+        number: newNumber
+      }).then(response =>
+          setPersons(persons.concat(response))
+        )
+        .catch(error => alert(`Error adding number\n${error}`))
     }
   }
 
