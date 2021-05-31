@@ -36,7 +36,8 @@ const App = () => {
       const copy = [...persons]
       copy.push({
         name: newName,
-        number: newNumber
+        number: newNumber,
+        id: copy.length + 1
       })
       setPersons(copy)
     }
