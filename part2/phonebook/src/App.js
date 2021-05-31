@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 
+import Numbers from "./components/Numbers"
+
 const App = () => {
   const [ persons, setPersons ] = useState([
     { name: 'Arto Hellas' }
@@ -18,7 +20,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      ...
+      <Numbers persons={persons}/>
     </div>
   )
 }
