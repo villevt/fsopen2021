@@ -5,18 +5,23 @@ import Numbers from "./components/Numbers"
 
 const App = () => {
   const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', number: '040-1234567' }
   ]) 
 
   const newPerson = (event) => {
-    event.preventDefault()
     const newName = event.target.form[0].value
+    const newNumber = event.target.form[1].value
 
     if (persons.some((value) => value.name === newName)) {
-      alert(newName + " is already added to phonebook")
+      alert(`${newName} is already in phonebook`)
+    } else if (persons.some((value) => value.number === newNumber)) {
+      alert (`${newNumber} is already in phonebook`)
     } else {
       const copy = [...persons]
-      copy.push({name: event.target.form[0].value})
+      copy.push({
+        name: newName,
+        number: newNumber
+      })
       setPersons(copy)
     }
   }
