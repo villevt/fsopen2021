@@ -10,9 +10,15 @@ const App = () => {
 
   const newPerson = (event) => {
     event.preventDefault()
-    const copy = [...persons]
-    copy.push({name: event.target.form[0].value})
-    setPersons(copy)
+    const newName = event.target.form[0].value
+
+    if (persons.some((value) => value.name === newName)) {
+      alert(newName + " is already added to phonebook")
+    } else {
+      const copy = [...persons]
+      copy.push({name: event.target.form[0].value})
+      setPersons(copy)
+    }
   }
 
   return (
