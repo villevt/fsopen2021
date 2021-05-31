@@ -2,7 +2,7 @@ import React from 'react'
 
 const Filter = ({handleFilter}) => (
     <div>
-        filter shown with <input onChange={handleFilter}/>
+        find countries <input onChange={handleFilter}/>
     </div>
 )
 
