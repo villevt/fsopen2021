@@ -14,9 +14,23 @@ const App = () => {
   }]) 
   const [filter, setFilter] = useState("")
 
+  const personSetter = (values) => {
+    setPersons(values.map(value => {
+      return {...value, removeHandler: () => {
+        if (window.confirm(`Delete ${value.name}?`)) {
+          numberService.remove(value.id)
+          .then(response => {
+            personSetter(values.filter(val => val.id !== value.id))
+          })
+          .catch(error => alert(`Failed to delete person\n${error}`))
+        }
+      }}
+    }))
+  }
+
   useEffect(() => {
     numberService.getAll()
-      .then(response => setPersons(response))
+      .then(response => personSetter(response))
       .catch(error => alert(`Failed to retrieve numbers \n${error}`))
   }, [])
 
@@ -30,7 +44,18 @@ const App = () => {
     const newNumber = event.target.form[1].value
 
     if (persons.some((value) => value.name === newName)) {
-      alert(`${newName} is already in phonebook`)
+      if (window.confirm(`${newName} is already in the phonebook. Replace the old number with a new one?`)) {
+        numberService.update({
+          name: newName,
+          number: newNumber,
+          id: persons.find(person => person.name === newName).id
+        }).then(response => personSetter(persons.map(person => {
+          if (person.name === newName) {
+            person.number = newNumber
+          }
+          return person
+        }))).catch(error => alert(`Error updating number\n${error}`))
+      }
     } else if (persons.some((value) => value.number === newNumber)) {
       alert (`${newNumber} is already in phonebook`)
     } else {
@@ -38,7 +63,7 @@ const App = () => {
         name: newName,
         number: newNumber
       }).then(response =>
-          setPersons(persons.concat(response))
+          personSetter(persons.concat(response))
         )
         .catch(error => alert(`Error adding number\n${error}`))
     }

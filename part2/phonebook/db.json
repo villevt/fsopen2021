@@ -22,23 +22,8 @@
     },
     {
       "name": "Ville Turku",
-      "number": "0000 0000",
+      "number": "021502",
       "id": 5
-    },
-    {
-      "name": "Fake Faker",
-      "number": "+111 111 111",
-      "id": 6
-    },
-    {
-      "name": "Add this ",
-      "number": "130510",
-      "id": 7
-    },
-    {
-      "name": "Spam attack",
-      "number": "02 00 12 125 60",
-      "id": 8
     }
   ]
 }
