@@ -2,7 +2,6 @@ import React from 'react'
 
 const CountryDisplay = ({country}) => (
     <div>
-        {console.log(country)}
         <h1>{country.name}</h1>
         Capital {country.capital}
         <br />

@@ -13,13 +13,7 @@ const App = () => {
     languages: [{}],
     flag: ""
   }]) 
-  const [displayedCountry, setDisplayedCountry] = useState({
-    name: "",
-    capital: "",
-    population: 0,
-    languages: [{}],
-    flag: ""
-  })
+  const [displayedCountry, setDisplayedCountry] = useState({})
   const [filter, setFilter] = useState("")
 
   useEffect(() => {
@@ -46,6 +40,10 @@ const App = () => {
     setFilter(newFilter)
   }
 
+  const showCountryDisplay = (event) => {
+    setDisplayedCountry(countries.find(country => country.name === event.target.value))
+  }
+
   const filteredCountries = filterCountries()
 
   const tooManyMatches = filteredCountries.length > 10 
@@ -53,7 +51,7 @@ const App = () => {
     : ""
 
   const countryList = filteredCountries.length > 1 && filteredCountries.length <= 10 
-    ? <CountryList countries={filteredCountries} /> 
+    ? <CountryList countries={filteredCountries} handleClick={showCountryDisplay}/> 
     : ""
 
   const countryDisplay = displayedCountry.name
