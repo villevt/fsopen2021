@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import axios from 'axios'
 
 import CountryDisplay from "./components/CountryDisplay"
@@ -13,7 +13,14 @@ const App = () => {
     languages: [{}],
     flag: ""
   }]) 
-  const [filter, setFilter] = useState('')
+  const [displayedCountry, setDisplayedCountry] = useState({
+    name: "",
+    capital: "",
+    population: 0,
+    languages: [{}],
+    flag: ""
+  })
+  const [filter, setFilter] = useState("")
 
   useEffect(() => {
     axios.get("https://restcountries.eu/rest/v2/all?fields=name;capital;population;languages;flag").then(response=> {
@@ -21,24 +28,44 @@ const App = () => {
     })
   }, [])
 
+  const filterCountries = useCallback(() => {
+    return countries.filter(country => country.name.toLowerCase().startsWith(filter))
+  }, [countries, filter])
+
+  useEffect(() => {
+    const filteredCountries = filterCountries()
+    if (filteredCountries.length === 1) {
+      setDisplayedCountry(filteredCountries[0])
+    } else {
+      setDisplayedCountry({})
+    }
+  }, [filterCountries])
+
   const filterHandler = (event) => {
     const newFilter = event.target.value.toLowerCase()
     setFilter(newFilter)
   }
 
-  const filteredCountries = countries.filter(country => country.name.toLowerCase().startsWith(filter))
-  let countryNode = "Too many matches, specify another filter."
-  if (filteredCountries.length === 1 && filteredCountries[0].name !== "") {
-    countryNode = <CountryDisplay country={filteredCountries[0]} />
-  } else if (filteredCountries.length <= 10) {
-    countryNode = <CountryList countries={filteredCountries} />
-  }
+  const filteredCountries = filterCountries()
 
+  const tooManyMatches = filteredCountries.length > 10 
+    ? "Too many matches, specify another filter." 
+    : ""
+
+  const countryList = filteredCountries.length > 1 && filteredCountries.length <= 10 
+    ? <CountryList countries={filteredCountries} /> 
+    : ""
+
+  const countryDisplay = displayedCountry.name
+    ? <CountryDisplay country={displayedCountry} /> 
+    : ""
 
   return (
     <div>
       <Filter handleFilter={filterHandler}/>
-      {countryNode}
+      {tooManyMatches}
+      {countryList}
+      {countryDisplay}
     </div>
   )
 }
