@@ -1,38 +1,25 @@
-import React, {useState} from 'react'
+import React from 'react'
 
 const AddNumber = ({handleSubmit}) => {
-    const [newName, setNewName] = useState('')
-    const [newNumber, setNewNumber] = useState('')
-
-    const nameChange = (event) => {
-        setNewName(event.target.value)
-    }
-
-    const numberChange = (event) => {
-        setNewNumber(event.target.value)
-    }
-
     const submitPressed = (event) => {
         event.preventDefault()
 
-        if (newName === "") {
+        if (event.target.form[0].value === "") {
             alert("Please fill in a name")
-        } else if (newNumber === "") {
+        } else if (event.target.form[1].value === "") {
             alert("Please fill in a number")
         } else {
             handleSubmit(event)
-            setNewName('')
-            setNewNumber('')
         }
     }
 
     return (
         <form>
             <div>
-                name: <input value={newName} onChange={nameChange}/>
+                name: <input />
             </div>
             <div>
-                number: <input value={newNumber} onChange={numberChange} />
+                number: <input />
             </div>
             <div>
                 <button onClick={submitPressed} type="submit">add</button>
