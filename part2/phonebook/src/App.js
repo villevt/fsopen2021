@@ -1,12 +1,20 @@
 import React, { useState } from 'react'
 
 import AddNumber from "./components/AddNumber"
+import Filter from "./components/Filter"
 import Numbers from "./components/Numbers"
 
 const App = () => {
   const [ persons, setPersons ] = useState([
     { name: 'Arto Hellas', number: '040-1234567' }
   ]) 
+
+  const [filter, setFilter] = useState(new RegExp(''))
+
+  const filterHandler = (event) => {
+    const newFilter = new RegExp(`^${event.target.value.toLowerCase()}`)
+    setFilter(newFilter)
+  }
 
   const newPerson = (event) => {
     const newName = event.target.form[0].value
@@ -28,10 +36,12 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <Filter handleFilter={filterHandler}/>
+      <h2>Add a new</h2>
       <AddNumber handleSubmit={newPerson}/>
       <h2>Numbers</h2>
-      <Numbers persons={persons}/>
+      <Numbers persons={persons.filter((person) => filter.test(person.name.toLowerCase()))}/>
     </div>
   )
 }
