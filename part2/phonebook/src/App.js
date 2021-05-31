@@ -11,7 +11,7 @@ const App = () => {
     number: "",
     id: 0
   }]) 
-  const [filter, setFilter] = useState(new RegExp(''))
+  const [filter, setFilter] = useState("")
 
   useEffect(() => {
     axios.get("http://localhost:3001/persons").then(response=> {
@@ -20,7 +20,7 @@ const App = () => {
   }, [])
 
   const filterHandler = (event) => {
-    const newFilter = new RegExp(`^${event.target.value.toLowerCase()}`)
+    const newFilter = event.target.value.toLowerCase()
     setFilter(newFilter)
   }
 
@@ -50,7 +50,7 @@ const App = () => {
       <h2>Add a new</h2>
       <AddNumber handleSubmit={newPerson}/>
       <h2>Numbers</h2>
-      <Numbers persons={persons.filter((person) => filter.test(person.name.toLowerCase()))}/>
+      <Numbers persons={persons.filter((person) => person.name.toLowerCase().startsWith(filter))}/>
     </div>
   )
 }

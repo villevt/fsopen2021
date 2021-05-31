@@ -13,7 +13,7 @@ const App = () => {
     languages: [{}],
     flag: ""
   }]) 
-  const [filter, setFilter] = useState(new RegExp(''))
+  const [filter, setFilter] = useState('')
 
   useEffect(() => {
     axios.get("https://restcountries.eu/rest/v2/all?fields=name;capital;population;languages;flag").then(response=> {
@@ -22,11 +22,11 @@ const App = () => {
   }, [])
 
   const filterHandler = (event) => {
-    const newFilter = new RegExp(`^${event.target.value.toLowerCase()}`)
+    const newFilter = event.target.value.toLowerCase()
     setFilter(newFilter)
   }
 
-  const filteredCountries = countries.filter(country => filter.test(country.name.toLowerCase()))
+  const filteredCountries = countries.filter(country => country.name.toLowerCase().startsWith(filter))
   let countryNode = "Too many matches, specify another filter."
   if (filteredCountries.length === 1 && filteredCountries[0].name !== "") {
     countryNode = <CountryDisplay country={filteredCountries[0]} />
