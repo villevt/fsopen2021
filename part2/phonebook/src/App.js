@@ -4,15 +4,24 @@ import numberService from "./services/numbers"
 
 import AddNumber from "./components/AddNumber"
 import Filter from "./components/Filter"
+import Notification from "./components/Notification"
 import Numbers from "./components/Numbers"
 
 const App = () => {
-  const [persons, setPersons] = useState([{
-    name: "",
-    number: "",
-    id: 0
-  }]) 
+  const [persons, setPersons] = useState([{}]) 
   const [filter, setFilter] = useState("")
+  let [notification, setNotification] = useState({
+    notification: null,
+    error: false
+  })
+
+  const notificationTimeout = (newNotification, error=false) => {
+    setNotification({
+      notification: newNotification,
+      error: error
+    })
+    setTimeout(() => setNotification({notification: null, error: false}), 3000)
+  }
 
   const personSetter = (values) => {
     setPersons(values.map(value => {
@@ -21,8 +30,9 @@ const App = () => {
           numberService.remove(value.id)
           .then(response => {
             personSetter(values.filter(val => val.id !== value.id))
+            notificationTimeout(`Deleted ${value.name}`)
           })
-          .catch(error => alert(`Failed to delete person\n${error}`))
+          .catch(error => notificationTimeout(`Failed to delete person\n${error}`, true))
         }
       }}
     }))
@@ -31,7 +41,7 @@ const App = () => {
   useEffect(() => {
     numberService.getAll()
       .then(response => personSetter(response))
-      .catch(error => alert(`Failed to retrieve numbers \n${error}`))
+      .catch(error => notificationTimeout(`Failed to retrieve numbers \n${error}`, true))
   }, [])
 
   const filterHandler = (event) => {
@@ -49,34 +59,47 @@ const App = () => {
           name: newName,
           number: newNumber,
           id: persons.find(person => person.name === newName).id
-        }).then(response => personSetter(persons.map(person => {
-          if (person.name === newName) {
-            person.number = newNumber
-          }
-          return person
-        }))).catch(error => alert(`Error updating number\n${error}`))
+        })
+          .then(response => {
+            personSetter(
+              persons.map(person => {
+                if (person.name === newName) {
+                  person.number = newNumber
+                }
+                return person
+              })  
+            )
+            notificationTimeout(`Updated ${response.name}`)
+          }).catch(error => notificationTimeout(`Error updating number\n${error}`, true))
       }
     } else if (persons.some((value) => value.number === newNumber)) {
-      alert (`${newNumber} is already in phonebook`)
+      notificationTimeout(`${newNumber} is already in phonebook`)
     } else {
       numberService.create({
         name: newName,
         number: newNumber
-      }).then(response =>
+      }).then(response => {
           personSetter(persons.concat(response))
-        )
-        .catch(error => alert(`Error adding number\n${error}`))
+          notificationTimeout(`Added ${response.name}`)
+        })
+        .catch(error => notificationTimeout(`Error adding number\n${error}`, true))
     }
+  }
+
+  let numbers = ""
+  if (persons[0].name) {
+    numbers = <Numbers persons={persons.filter((person) => person.name.toLowerCase().startsWith(filter))}/>
   }
 
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notification.notification} error={notification.error}/>
       <Filter handleFilter={filterHandler}/>
       <h2>Add a new</h2>
       <AddNumber handleSubmit={newPerson}/>
       <h2>Numbers</h2>
-      <Numbers persons={persons.filter((person) => person.name.toLowerCase().startsWith(filter))}/>
+      {numbers}
     </div>
   )
 }
