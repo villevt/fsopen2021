@@ -45,13 +45,34 @@ app.post("/api/persons", (request, response, next) => {
 })
 
 app.get("/api/persons/:id", (request, response) => {
-    const id = Number(request.params.id)
-    const person = persons.find(person => person.id === id)
+    Person.findById(request.params.id)
+        .then(result => {
+            response.json(result)
+        })
+        .catch(error => next(error))
+})
 
-    if (person) {
-        response.json(person)
+app.put("/api/persons/:id", (request, response, next) => {
+    const body = request.body
+
+    const person = {
+        name: body.name,
+        number: body.number,
+    }
+
+    if (!body) {
+        next(new Error("MissingContentError"))
+    } else if (!body.name) {
+        next(new Error("MissingNameError"))
+    } else if (!body.number) {
+        next(new Error("MissingNumberError"))
     } else {
-        response.status(404).end()
+        console.log(request.params.id)
+        Person.findByIdAndUpdate(request.params.id, person, {new: true})
+            .then(result => {
+                response.json(result)
+            })
+            .catch(error => next(error)) 
     }
 })
 
@@ -64,7 +85,11 @@ app.delete("/api/persons/:id", (request, response, next) => {
 })
 
 app.get("/info", (request, response) => {
-    response.send(`Phonebook has info for ${persons.length} people<br/><br/>${new Date()}`)
+    Person.find({})
+        .then(result => {
+            response.send(`Phonebook has info for ${result.length} people<br/><br/>${new Date()}`)
+        })
+        .catch(error => next(error))
 })
 
 const PORT = process.env.PORT || 3001
