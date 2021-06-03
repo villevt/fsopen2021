@@ -6,7 +6,7 @@ const Person = require("./models/person")
 const app = express()
 app.use(express.static("build"))
 
-morgan.token("content", (request, response) => {
+morgan.token("content", (request) => {
     return JSON.stringify(request.body)
 })
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :content"))
@@ -36,7 +36,7 @@ app.post("/api/persons", (request, response, next) => {
         .catch(error => next(error)) 
 })
 
-app.get("/api/persons/:id", (request, response) => {
+app.get("/api/persons/:id", (request, response, next) => {
     Person.findById(request.params.id)
         .then(result => {
             response.json(result)
@@ -61,13 +61,13 @@ app.put("/api/persons/:id", (request, response, next) => {
 
 app.delete("/api/persons/:id", (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
-        .then(result => {
+        .then(() => {
             response.status(204).end()
         })
         .catch(error => next(error))
 })
 
-app.get("/info", (request, response) => {
+app.get("/info", (request, response, next) => {
     Person.find({})
         .then(result => {
             response.send(`Phonebook has info for ${result.length} people<br/><br/>${new Date()}`)
