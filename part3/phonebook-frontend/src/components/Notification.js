@@ -5,7 +5,7 @@ const Notification = ({message, error}) => {
         color: "white",
         marginBottom: "10px",
         padding: "2px",
-        width: "30%"
+        width: "50%"
     }
 
     if (error) {

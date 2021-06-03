@@ -3,6 +3,8 @@ import axios from 'axios'
 const url = "/api/persons"
 
 const getAll = () => {
+    axios.get(url)
+
     return axios.get(url).then(response => response.data)
 }
 

@@ -32,7 +32,7 @@ const App = () => {
             personSetter(values.filter(val => val.id !== value.id))
             notificationTimeout(`Deleted ${value.name}`)
           })
-          .catch(error => notificationTimeout(`Failed to delete person\n${error}`, true))
+          .catch(error => notificationTimeout(`Failed to delete person\n${error.response.data.error}`, true))
         }
       }}
     }))
@@ -41,7 +41,7 @@ const App = () => {
   useEffect(() => {
     numberService.getAll()
       .then(response => personSetter(response))
-      .catch(error => notificationTimeout(`Failed to retrieve numbers \n${error}`, true))
+      .catch(error => notificationTimeout(`Failed to retrieve numbers \n${error.response.data.error}`, true))
   }, [])
 
   const filterHandler = (event) => {
@@ -70,7 +70,7 @@ const App = () => {
               })  
             )
             notificationTimeout(`Updated ${response.name}`)
-          }).catch(error => notificationTimeout(`Error updating number\n${error}`, true))
+          }).catch(error => notificationTimeout(`Error updating number\n${error.response.data.error}`, true))
       }
     } else if (persons.some((value) => value.number === newNumber)) {
       notificationTimeout(`${newNumber} is already in phonebook`)
@@ -82,7 +82,9 @@ const App = () => {
           personSetter(persons.concat(response))
           notificationTimeout(`Added ${response.name}`)
         })
-        .catch(error => notificationTimeout(`Error adding number\n${error}`, true))
+        .catch(error => {
+          notificationTimeout(`Error adding number\n${error.response.data.error}`, true)
+        })
     }
   }
 

@@ -29,19 +29,11 @@ app.post("/api/persons", (request, response, next) => {
         number: body.number,
     })
 
-    if (!body) {
-        next(new Error("MissingContentError"))
-    } else if (!body.name) {
-        next(new Error("MissingNameError"))
-    } else if (!body.number) {
-        next(new Error("MissingNumberError"))
-    } else {
-        person.save()
-            .then(result => {
-                response.json(result)
-            })
-            .catch(error => next(error)) 
-    }
+    person.save()
+        .then(result => {
+            response.json(result)
+        })
+        .catch(error => next(error)) 
 })
 
 app.get("/api/persons/:id", (request, response) => {
@@ -60,20 +52,11 @@ app.put("/api/persons/:id", (request, response, next) => {
         number: body.number,
     }
 
-    if (!body) {
-        next(new Error("MissingContentError"))
-    } else if (!body.name) {
-        next(new Error("MissingNameError"))
-    } else if (!body.number) {
-        next(new Error("MissingNumberError"))
-    } else {
-        console.log(request.params.id)
-        Person.findByIdAndUpdate(request.params.id, person, {new: true})
-            .then(result => {
-                response.json(result)
-            })
-            .catch(error => next(error)) 
-    }
+     Person.findByIdAndUpdate(request.params.id, person, {new: true})
+        .then(result => {
+            response.json(result)
+        })
+        .catch(error => next(error)) 
 })
 
 app.delete("/api/persons/:id", (request, response, next) => {
@@ -102,6 +85,8 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === "CastError") {
         return response.status(400).send({error: "malformatted id"})
+    } else if (error.name === "ValidationError") {
+        return response.status(400).json({error: error.message})
     }
 
     next(error)
