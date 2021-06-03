@@ -1,5 +1,5 @@
-#### Phonebook
+#### Phonebook-frontend
 
-A simple phonebook application. Allows for creating, changing and deleting contacts. Backend runs on json-server.
+A simple phonebook application frontend. Allows for creating, changing and deleting contacts. In this version, backend is an API that can be run from any source.
 
 ![](phonebook.png)
