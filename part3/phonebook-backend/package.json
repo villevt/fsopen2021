@@ -7,8 +7,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf build && cd ../phonebook-frontend && npm run build && cp -r build ../notes-backend",
-    "deploy": "npm run build && git add . && git commit -m deploy && cd ../../ && git push && git subtree push -P part3/phonebook-backend heroku master"
+    "build:ui": "rm -rf build && cd ../phonebook-frontend && npm run build && cp -r build ../notes-backend",
+    "deploy": "npm run build:ui && git add . && git commit -m deploy && cd ../../ && git push && git subtree push -P part3/phonebook-backend heroku master"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
