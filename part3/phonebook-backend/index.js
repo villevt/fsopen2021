@@ -13,43 +13,35 @@ app.use(morgan(":method :url :status :res[content-length] - :response-time ms :c
 
 app.use(express.json())
 
-app.get("/api/persons", (request, response) => {
-    Person.find({}).then(persons => {
-        response.json(persons)
-    })
+app.get("/api/persons", (request, response, next) => {
+    Person.find({})
+        .then(persons => {
+            response.json(persons)
+        })
+        .catch(error => next(error))
 })
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
     const body = request.body
-
-    if (!body) {
-        return response.status(400).json({
-            error: "content missing"
-        })
-    } else if (!body.name) {
-        return response.status(400).json({
-            error: "name missing"
-        })
-    } else if (!body.number) {
-        return response.status(400).json({
-            error: "number missing"
-        })
-    } 
-    
-    /*else if (persons.some(person => person.name == body.name)) {
-        return response.status(400).json({
-            error: "name must be unique"
-        })
-    }*/
 
     const person = new Person({
         name: body.name,
         number: body.number,
     })
 
-    person.save().then(result => {
-        response.json(result)
-    })
+    if (!body) {
+        next(new Error("MissingContentError"))
+    } else if (!body.name) {
+        next(new Error("MissingNameError"))
+    } else if (!body.number) {
+        next(new Error("MissingNumberError"))
+    } else {
+        person.save()
+            .then(result => {
+                response.json(result)
+            })
+            .catch(error => next(error)) 
+    }
 })
 
 app.get("/api/persons/:id", (request, response) => {
@@ -63,15 +55,12 @@ app.get("/api/persons/:id", (request, response) => {
     }
 })
 
-app.delete("/api/persons/:id", (request, response) => {
+app.delete("/api/persons/:id", (request, response, next) => {
     Person.findByIdAndRemove(request.params.id)
         .then(result => {
             response.status(204).end()
         })
-        .catch(error => {
-            console.log(error)
-            response.status(500).end()
-        })
+        .catch(error => next(error))
 })
 
 app.get("/info", (request, response) => {
@@ -82,3 +71,15 @@ const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
+
+const errorHandler = (error, request, response, next) => {
+    console.log(error)
+
+    if (error.name === "CastError") {
+        return response.status(400).send({error: "malformatted id"})
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
