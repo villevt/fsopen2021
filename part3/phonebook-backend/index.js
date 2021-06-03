@@ -34,21 +34,22 @@ app.post("/api/persons", (request, response) => {
         return response.status(400).json({
             error: "number missing"
         })
-    } else if (persons.some(person => person.name == body.name)) {
+    } 
+    
+    /*else if (persons.some(person => person.name == body.name)) {
         return response.status(400).json({
             error: "name must be unique"
         })
-    }
+    }*/
 
-    const person = {
-        id: Math.floor(Math.random() * Number.MAX_SAFE_INTEGER),
+    const person = new Person({
         name: body.name,
         number: body.number,
-    }
+    })
 
-    persons = persons.concat(person)
-
-    response.json(person)
+    person.save().then(result => {
+        response.json(result)
+    })
 })
 
 app.get("/api/persons/:id", (request, response) => {
