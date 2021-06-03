@@ -11,7 +11,7 @@ morgan.token("content", (request, response) => {
 })
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :content"))
 
-app.use(express.json())
+app.use(express.json()
 
 app.get("/api/persons", (request, response) => {
     Person.find({}).then(persons => {
