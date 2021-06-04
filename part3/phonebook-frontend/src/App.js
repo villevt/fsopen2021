@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState} from "react"
 
 import numberService from "./services/numbers" 
 
@@ -28,11 +28,11 @@ const App = () => {
       return {...value, removeHandler: () => {
         if (window.confirm(`Delete ${value.name}?`)) {
           numberService.remove(value.id)
-          .then(response => {
-            personSetter(values.filter(val => val.id !== value.id))
-            notificationTimeout(`Deleted ${value.name}`)
-          })
-          .catch(error => notificationTimeout(`Failed to delete person\n${error.response.data.error}`, true))
+            .then(() => {
+              personSetter(values.filter(val => val.id !== value.id))
+              notificationTimeout(`Deleted ${value.name}`)
+            })
+            .catch(error => notificationTimeout(`Failed to delete person\n${error.response.data.error}`, true))
         }
       }}
     }))
@@ -78,7 +78,8 @@ const App = () => {
       numberService.create({
         name: newName,
         number: newNumber
-      }).then(response => {
+      })
+        .then(response => {
           personSetter(persons.concat(response))
           notificationTimeout(`Added ${response.name}`)
         })

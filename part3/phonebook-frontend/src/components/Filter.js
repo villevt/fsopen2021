@@ -1,9 +1,9 @@
-import React from 'react'
+import React from "react"
 
 const Filter = ({handleFilter}) => (
-    <div>
-        filter shown with <input onChange={handleFilter}/>
-    </div>
+  <div>
+    filter shown with <input onChange={handleFilter}/>
+  </div>
 )
 
 export default Filter
