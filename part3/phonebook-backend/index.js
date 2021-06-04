@@ -52,7 +52,7 @@ app.put("/api/persons/:id", (request, response, next) => {
     number: body.number,
   }
 
-  Person.findByIdAndUpdate(request.params.id, person, {new: true})
+  Person.findByIdAndUpdate(request.params.id, person, {context: "query", new: true, runValidators: true})
     .then(result => {
       response.json(result)
     })
