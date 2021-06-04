@@ -1,11 +1,11 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose")
 
 if (process.argv.length < 3) {
-    console.log("Give password as argument")
-    process.exit(1)
+  console.log("Give password as argument")
+  process.exit(1)
 } else if (process.argv.length !== 3 && process.argv.length !== 5) {
-    console.log("Invalid arguments")
-    process.exit(1)
+  console.log("Invalid arguments")
+  process.exit(1)
 }
 
 const password = process.argv[2]
@@ -15,8 +15,8 @@ const url = `mongodb+srv://phonebook-admin:${password}@cluster0.elo10.mongodb.ne
 mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true})
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String
+  name: String,
+  number: String
 })
 
 const Person = mongoose.model("Person", personSchema)
