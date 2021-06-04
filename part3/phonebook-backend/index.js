@@ -7,33 +7,33 @@ const app = express()
 app.use(express.static("build"))
 
 morgan.token("content", (request) => {
-    return JSON.stringify(request.body)
+  return JSON.stringify(request.body)
 })
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :content"))
 
 app.use(express.json())
 
 app.get("/api/persons", (request, response, next) => {
-    Person.find({})
-        .then(persons => {
-            response.json(persons)
-        })
-        .catch(error => next(error))
+  Person.find({})
+    .then(persons => {
+      response.json(persons)
+    })
+    .catch(error => next(error))
 })
 
 app.post("/api/persons", (request, response, next) => {
-    const body = request.body
+  const body = request.body
 
-    const person = new Person({
-        name: body.name,
-        number: body.number,
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  })
+
+  person.save()
+    .then(result => {
+      response.json(result)
     })
-
-    person.save()
-        .then(result => {
-            response.json(result)
-        })
-        .catch(error => next(error)) 
+    .catch(error => next(error)) 
 })
 
 app.get("/api/persons/:id", (request, response, next) => {
@@ -52,7 +52,7 @@ app.put("/api/persons/:id", (request, response, next) => {
         number: body.number,
     }
 
-     Person.findByIdAndUpdate(request.params.id, person, {new: true})
+    Person.findByIdAndUpdate(request.params.id, person, {new: true})
         .then(result => {
             response.json(result)
         })
