@@ -33,7 +33,7 @@ describe("GET blogs", () => {
   })
 })
 
-describe.only("POST blogs", () => {
+describe("POST blogs", () => {
   test("the amount of blogs grows by one", async () => {
     await api.post("/api/blogs")
       .send(helper.newBlog)
@@ -66,6 +66,16 @@ describe.only("POST blogs", () => {
 
     const content = response.body
     expect(content.likes).toBe(0)
+  })
+
+  test("if title and url are not given, return 400", async () => {
+    const blog = helper.newBlog
+    delete blog.title
+    delete blog.url
+
+    await api.post("/api/blogs")
+      .send(blog)
+      .expect(400)
   })
 })
 
