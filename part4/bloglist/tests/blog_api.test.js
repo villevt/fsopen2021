@@ -100,7 +100,6 @@ describe("DELETE blogs", () => {
 
     const blogsPostDelete = await helper.getBlogs()
 
-    console.log(blogsPreDelete)
     expect(blogsPostDelete).toEqual(blogsPreDelete)
   })
 })
