@@ -79,6 +79,75 @@ describe("POST blogs", () => {
   })
 })
 
+describe("DELETE blogs", () => {
+  test("deletion without ID or false ID returns 404", async () => {    
+    await api.delete("/api/blogs/")
+      .expect(404)
+  })
+
+  test("deletion with correct ID returns 204", async () => {
+    const blogs = await helper.getBlogs()
+    
+    await api.delete(`/api/blogs/${blogs[0].id}`)
+      .expect(204)
+  })
+
+  test("the correct item is deleted", async () => {
+    const blogsPreDelete = await helper.getBlogs()
+    
+    await api.delete(`/api/blogs/${blogsPreDelete[0].id}`)
+    blogsPreDelete.splice(0, 1)
+
+    const blogsPostDelete = await helper.getBlogs()
+
+    console.log(blogsPreDelete)
+    expect(blogsPostDelete).toEqual(blogsPreDelete)
+  })
+})
+
+describe("PUT blogs", () => {
+  test("updating an item returns status 204", async () => {
+    const blog = await helper.getBlog()
+    const updatedBlog = {
+      likes: blog.likes + 1,
+    }
+    await api.put(`/api/blogs/${blog.id}`)
+      .send(updatedBlog)
+      .expect(204)
+  })
+
+  test("updating a blog updates the item correctly in DB", async () => {
+    const blog = await helper.getBlog()
+    blog.likes += 1
+
+    await api.put(`/api/blogs/${blog.id}`)
+      .send(blog)
+      .expect(204)
+
+    const updatedBlog = await helper.getBlogById(blog.id)
+    expect(updatedBlog).toEqual(blog)
+  })
+
+  test("updating a blog without ID returns 400", async () => {
+    const blog = await helper.getBlog()
+    blog.likes += 1
+
+    await api.put("/api/blogs/")
+      .send(blog)
+      .expect(404)
+  })
+
+  test("updating a blog without supplying likes returns 400", async () => {
+    const blog = await helper.getBlog()
+    delete blog.likes
+
+    await api.put(`/api/blogs/${blog.id}`)
+      .send(blog)
+      .expect(400)
+  })
+})
+
+
 afterAll(() => {
   mongoose.connection.close()
 })
