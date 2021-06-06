@@ -55,6 +55,18 @@ describe.only("POST blogs", () => {
     })
     expect(blogs).toContainEqual(helper.newBlog)
   })
+
+  test("if field likes is given null, it will be set 0", async () => {
+    const blog = helper.newBlog
+    delete blog.likes
+
+    const response = await api.post("/api/blogs")
+      .send(blog)
+      .expect(201)
+
+    const content = response.body
+    expect(content.likes).toBe(0)
+  })
 })
 
 afterAll(() => {
