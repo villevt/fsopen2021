@@ -1,4 +1,5 @@
 const Blog = require("../models/blog")
+const User = require("../models/user")
 
 const initialBlogs = [
   {
@@ -73,10 +74,55 @@ const getBlogById = async (id) => {
   return blog.toJSON()
 }
 
+const initialUsers = [
+  {
+    _id: "5a4225a51bb4a676234d17f7",
+    username: "Reactor",
+    name: "Rayleigh Or",
+    password: "123",
+    __v: 0
+  },
+  {
+    _id: "5a422aa72b14a646234617f8",
+    username: "GOMaster",
+    name: "Go To",
+    password: "95gfaf8gj2k4rjfao",
+    __v: 0
+  },
+  {
+    _id: "5a422b3a1a52abc6a34d17f9",
+    username: "N00BTube",
+    name: "Kenny Kidd",
+    password: "FortNite123",
+    __v: 0
+  },
+  {
+    _id: "5a422b891b54a676234d17fa",
+    username: "Eräukko",
+    name: "Jorma Virtanen",
+    password: "123sanasala",
+    __v: 0
+  },
+]
+
+const newUser = {
+  username: "SuperUser",
+  name: "Usain User",
+  password: "050gagajiog934jgr"
+}
+
+const getUserById = async (id) => {
+  const user = await User.findById(id)
+  return user.toJSON()
+}
+
 module.exports = {
   initialBlogs,
   newBlog,
   getBlogs,
   getBlog,
-  getBlogById
+  getBlogById,
+  initialUsers,
+  newUser,
+  getUserById
 }

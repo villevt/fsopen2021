@@ -43,7 +43,7 @@ describe("POST blogs", () => {
     expect(blogs.length).toBe(helper.initialBlogs.length + 1)
   })
 
-  test("the newly added note exists in DB", async () => {
+  test("the newly added blog exists in DB", async () => {
     await api.post("/api/blogs")
       .send(helper.newBlog)
       .expect(201)
