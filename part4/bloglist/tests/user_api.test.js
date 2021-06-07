@@ -84,6 +84,38 @@ describe("POST new user", () => {
   })
 })
 
+describe.only("GET users", () => {
+  test("users are returned as JSON", async () => {
+    await api.get("/api/users")
+      .expect(200)
+      .expect("Content-type", /application\/json/)
+  })
+
+  test("correct amount of users are returned", async () => {
+    const response = await api.get("/api/users")
+    expect(response.body).toHaveLength(helper.initialUsers.length)
+  })
+
+  test("response has fields username, name and id", async () => {
+    const response = await api.get("/api/users")
+    const body = response.body
+    body.forEach(item => {
+      expect(item.username).toBeDefined()
+      expect(item.name).toBeDefined()
+      expect(item.id).toBeDefined()
+    })
+  })
+
+  test("response doesn't include password or its hash", async () => {
+    const response = await api.get("/api/users")
+    const body = response.body
+    body.forEach(item => {
+      expect(item.password).toBeUndefined()
+      expect(item.passwordHash).toBeUndefined()
+    })
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
