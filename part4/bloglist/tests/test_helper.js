@@ -69,7 +69,7 @@ const getBlog = async () => {
   return blog.toJSON()
 }
 
-const getBlogById = async (id) => {
+const getBlogById = async id => {
   const blog = await Blog.findById(id)
   return blog.toJSON()
 }
@@ -80,6 +80,11 @@ const initialUsers = [
     username: "Reactor",
     name: "Rayleigh Or",
     password: "123",
+    blogs: [
+      "5a422a851b54a676234d17f7",
+      "5a422aa71b54a676234d17f8",
+      "5a422ba71b54a676234d17fb"
+    ],
     __v: 0
   },
   {
@@ -87,6 +92,7 @@ const initialUsers = [
     username: "GOMaster",
     name: "Go To",
     password: "95gfaf8gj2k4rjfao",
+    blogs: [],
     __v: 0
   },
   {
@@ -94,6 +100,10 @@ const initialUsers = [
     username: "N00BTube",
     name: "Kenny Kidd",
     password: "FortNite123",
+    blogs: [
+      "5a422b891b54a676234d17fa",
+      "5a422bc61b54a676234d17fc"
+    ],
     __v: 0
   },
   {
@@ -101,6 +111,9 @@ const initialUsers = [
     username: "Eräukko",
     name: "Jorma Virtanen",
     password: "123sanasala",
+    blogs: [
+      "5a422b3a1b54a676234d17f9"
+    ],
     __v: 0
   },
 ]
@@ -111,7 +124,7 @@ const newUser = {
   password: "050gagajiog934jgr"
 }
 
-const getUserById = async (id) => {
+const getUserById = async id => {
   const user = await User.findById(id)
   return user.toJSON()
 }

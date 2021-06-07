@@ -4,8 +4,14 @@ const bcrypt = require("bcryptjs")
 const app = require("../app")
 const helper = require("./test_helper")
 const User = require("../models/user")
+const Blog = require("../models/blog")
 
 const api = supertest(app)
+
+beforeAll(async () => {
+  await Blog.deleteMany()
+  await Blog.insertMany(helper.initialBlogs)
+})
 
 beforeEach(async () => {
   await User.deleteMany()
@@ -14,7 +20,8 @@ beforeEach(async () => {
     return {
       username: user.username,
       name: user.name,
-      passwordHash: await bcrypt.hash(user.password, 10)
+      passwordHash: await bcrypt.hash(user.password, 10),
+      blogs: user.blogs
     }
   }))
 
@@ -106,7 +113,7 @@ describe("POST new user", () => {
   })
 })
 
-describe("GET users", () => {
+describe.only("GET users", () => {
   test("users are returned as JSON", async () => {
     await api.get("/api/users")
       .expect(200)
@@ -118,14 +125,26 @@ describe("GET users", () => {
     expect(response.body).toHaveLength(helper.initialUsers.length)
   })
 
-  test("response has fields username, name and id", async () => {
+  test("response has fields username, name, id and blogs", async () => {
     const response = await api.get("/api/users")
     const body = response.body
     body.forEach(item => {
       expect(item.username).toBeDefined()
       expect(item.name).toBeDefined()
       expect(item.id).toBeDefined()
+      expect(item.blogs).toBeDefined()
     })
+  })
+
+  test("response has populated users with valid blogs", async () => {
+    const response = await api.get("/api/users")
+    const body = response.body
+    for (const user of body) {
+      for (const blog of user.blogs) {
+        const match = await helper.getBlogById(blog.id)
+        expect(match).toEqual(blog)
+      }
+    }
   })
 
   test("response doesn't include password or its hash", async () => {
