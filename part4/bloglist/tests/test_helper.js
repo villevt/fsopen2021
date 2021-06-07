@@ -1,3 +1,4 @@
+const bcrypt = require("bcryptjs")
 const Blog = require("../models/blog")
 const User = require("../models/user")
 
@@ -8,6 +9,7 @@ const initialBlogs = [
     author: "Michael Chan",
     url: "https://reactpatterns.com/",
     likes: 7,
+    user: "5a4225a51bb4a676234d17f7",
     __v: 0
   },
   {
@@ -16,6 +18,7 @@ const initialBlogs = [
     author: "Edsger W. Dijkstra",
     url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
     likes: 5,
+    user: "5a4225a51bb4a676234d17f7",
     __v: 0
   },
   {
@@ -24,6 +27,7 @@ const initialBlogs = [
     author: "Edsger W. Dijkstra",
     url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
     likes: 12,
+    user: "5a422b891b54a676234d17fa",
     __v: 0
   },
   {
@@ -32,6 +36,7 @@ const initialBlogs = [
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll",
     likes: 10,
+    user: "5a422b3a1a52abc6a34d17f9",
     __v: 0
   },
   {
@@ -40,6 +45,7 @@ const initialBlogs = [
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
     likes: 0,
+    user: "5a4225a51bb4a676234d17f7",
     __v: 0
   },
   {
@@ -48,6 +54,7 @@ const initialBlogs = [
     author: "Robert C. Martin",
     url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
     likes: 2,
+    user: "5a422b3a1a52abc6a34d17f9",
     __v: 0
   }  
 ]
@@ -57,6 +64,11 @@ const newBlog = {
   author: "Testing Author",
   url: "https://testing.com",
   likes: 10
+}
+
+const initializeBlogs = async () => {
+  await Blog.deleteMany()
+  await Blog.insertMany(initialBlogs)
 }
 
 const getBlogs = async () => {
@@ -124,6 +136,19 @@ const newUser = {
   password: "050gagajiog934jgr"
 }
 
+const initializeUsers = async () => {
+  await User.deleteMany()
+
+  const users = await Promise.all(initialUsers.map(async user => {
+    const copy = {...user}
+    copy.passwordHash = await bcrypt.hash(user.password, 10)
+    delete copy.password
+    return copy
+  }))
+
+  await User.insertMany(users)
+}
+
 const getUserById = async id => {
   const user = await User.findById(id)
   return user.toJSON()
@@ -132,10 +157,12 @@ const getUserById = async id => {
 module.exports = {
   initialBlogs,
   newBlog,
+  initializeBlogs,
   getBlogs,
   getBlog,
   getBlogById,
   initialUsers,
   newUser,
+  initializeUsers,
   getUserById
 }

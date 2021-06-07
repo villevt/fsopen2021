@@ -4,28 +4,15 @@ const bcrypt = require("bcryptjs")
 const app = require("../app")
 const helper = require("./test_helper")
 const User = require("../models/user")
-const Blog = require("../models/blog")
 
 const api = supertest(app)
 
 beforeAll(async () => {
-  await Blog.deleteMany()
-  await Blog.insertMany(helper.initialBlogs)
+  await helper.initializeBlogs()
 })
 
 beforeEach(async () => {
-  await User.deleteMany()
-
-  const users = await Promise.all(helper.initialUsers.map(async user => {
-    return {
-      username: user.username,
-      name: user.name,
-      passwordHash: await bcrypt.hash(user.password, 10),
-      blogs: user.blogs
-    }
-  }))
-
-  await User.insertMany(users)
+  await helper.initializeUsers()
 })
 
 describe("POST new user", () => {
@@ -113,7 +100,7 @@ describe("POST new user", () => {
   })
 })
 
-describe.only("GET users", () => {
+describe("GET users", () => {
   test("users are returned as JSON", async () => {
     await api.get("/api/users")
       .expect(200)
@@ -141,7 +128,9 @@ describe.only("GET users", () => {
     const body = response.body
     for (const user of body) {
       for (const blog of user.blogs) {
-        const match = await helper.getBlogById(blog.id)
+        const match = {...await helper.getBlogById(blog.id)}
+        delete match.likes
+        delete match.user
         expect(match).toEqual(blog)
       }
     }

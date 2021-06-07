@@ -2,13 +2,15 @@ const mongoose = require("mongoose")
 const supertest = require("supertest")
 const app = require("../app")
 const helper = require("./test_helper")
-const Blog = require("../models/blog")
 
 const api = supertest(app)
 
+beforeAll(async () => {
+  await helper.initializeUsers()
+})
+
 beforeEach(async () => {
-  await Blog.deleteMany()
-  await Blog.insertMany(helper.initialBlogs)
+  await helper.initializeBlogs()
 })
 
 describe("GET blogs", () => {
@@ -30,6 +32,16 @@ describe("GET blogs", () => {
     contents.forEach(content => {
       expect(content.id).toBeDefined()
     })
+  })
+
+  test("response has populated blogs with valid users", async () => {
+    const response = await api.get("/api/blogs")
+    const body = response.body
+    for (const blog of body) {
+      const match = {...await helper.getUserById(blog.user.id)}
+      delete match.blogs
+      expect(match).toEqual(blog.user)
+    }
   })
 })
 
