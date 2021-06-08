@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs")
+const jwt = require("jsonwebtoken")
 const Blog = require("../models/blog")
 const User = require("../models/user")
+const config = require("../utils/config")
 
 const initialBlogs = [
   {
@@ -154,6 +156,12 @@ const getUserById = async id => {
   return user.toJSON()
 }
 
+const getUserFromToken = async token => {
+  const decoded = jwt.verify(token, config.TOKEN_SECRET)
+  const user = await getUserById(decoded.id)
+  return user
+}
+
 module.exports = {
   initialBlogs,
   newBlog,
@@ -161,6 +169,7 @@ module.exports = {
   getBlogs,
   getBlog,
   getBlogById,
+  getUserFromToken,
   initialUsers,
   newUser,
   initializeUsers,
