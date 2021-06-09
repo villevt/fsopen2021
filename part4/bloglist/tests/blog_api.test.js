@@ -46,48 +46,93 @@ describe("GET blogs", () => {
 })
 
 describe("POST blogs", () => {
-  test("the amount of blogs grows by one", async () => {
-    await api.post("/api/blogs")
-      .send(helper.newBlog)
-      .expect(201)
-
-    const blogs = await helper.getBlogs()
-    expect(blogs.length).toBe(helper.initialBlogs.length + 1)
+  let token = ""
+  beforeAll(async () => {
+    const response = await api.post("/api/login")
+      .send({
+        username: helper.initialUsers[0].username,
+        password: helper.initialUsers[0].password
+      })
+    token = `Bearer ${response.body.token}`
   })
 
-  test("the newly added blog exists in DB", async () => {
-    await api.post("/api/blogs")
-      .send(helper.newBlog)
-      .expect(201)
-
-    const blogs = await helper.getBlogs()
-    blogs.map(blog => {
-      delete blog.id
-      return blog
+  describe("valid blog creation", () => {
+    test("the amount of blogs grows by one", async () => {
+      await api.post("/api/blogs")
+        .set("Authorization", token)
+        .send(helper.newBlog)
+        .expect(201)
+  
+      const blogs = await helper.getBlogs()
+      expect(blogs.length).toBe(helper.initialBlogs.length + 1)
     })
-    expect(blogs).toContainEqual(helper.newBlog)
+  
+    test("the newly added blog exists in DB", async () => {
+      await api.post("/api/blogs")
+        .set("Authorization", token)
+        .send(helper.newBlog)
+        .expect(201)
+  
+      const blogs = await helper.getBlogs()
+      blogs.map(blog => {
+        delete blog.id
+        delete blog.user
+        return blog
+      })
+      expect(blogs).toContainEqual(helper.newBlog)
+    })
+
+    test("the newly added blog has the correct user ID", async () => {
+      const response = await api.post("/api/blogs")
+        .set("Authorization", token)
+        .send(helper.newBlog)
+
+      expect(response.body.user.id).toBe(helper.initialUsers[0]._id)
+    })
   })
 
-  test("if field likes is given null, it will be set 0", async () => {
-    const blog = helper.newBlog
-    delete blog.likes
+  describe("invalid blog creation", () => {
+    test("if field likes is given null, it will be set 0", async () => {
+      const blog = helper.newBlog
+      delete blog.likes
+  
+      const response = await api.post("/api/blogs")
+        .set("Authorization", token)
+        .send(blog)
+        .expect(201)
+  
+      const content = response.body
+      expect(content.likes).toBe(0)
+    })
+  
+    test("if title and url are not given, return 400", async () => {
+      const blog = helper.newBlog
+      delete blog.title
+      delete blog.url
+  
+      await api.post("/api/blogs")
+        .set("Authorization", token)
+        .send(blog)
+        .expect(400)
+    })
 
-    const response = await api.post("/api/blogs")
-      .send(blog)
-      .expect(201)
+    test("posting with invalid or missing token returns 401", async () => {
+      const blog = helper.newBlog
+  
+      await api.post("/api/blogs")
+        .set("Authorization", `${token}0`)
+        .send(blog)
+        .expect(401)
 
-    const content = response.body
-    expect(content.likes).toBe(0)
-  })
+      await api.post("/api/blogs")
+        .set("Authorization", token.substring(7))
+        .send(blog)
+        .expect(401)
 
-  test("if title and url are not given, return 400", async () => {
-    const blog = helper.newBlog
-    delete blog.title
-    delete blog.url
-
-    await api.post("/api/blogs")
-      .send(blog)
-      .expect(400)
+      await api.post("/api/blogs")
+        .send(blog)
+        .expect(401)
+    })
   })
 })
 
