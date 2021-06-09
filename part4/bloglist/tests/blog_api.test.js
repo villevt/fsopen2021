@@ -137,8 +137,19 @@ describe("POST blogs", () => {
 })
 
 describe("DELETE blogs", () => {
+  let token = ""
+  beforeAll(async () => {
+    const response = await api.post("/api/login")
+      .send({
+        username: helper.initialUsers[0].username,
+        password: helper.initialUsers[0].password
+      })
+    token = `Bearer ${response.body.token}`
+  })
+
   test("deletion without ID or false ID returns 404", async () => {    
     await api.delete("/api/blogs/")
+      .set("Authorization", token)
       .expect(404)
   })
 
@@ -146,6 +157,7 @@ describe("DELETE blogs", () => {
     const blogs = await helper.getBlogs()
     
     await api.delete(`/api/blogs/${blogs[0].id}`)
+      .set("Authorization", token)
       .expect(204)
   })
 
@@ -153,11 +165,30 @@ describe("DELETE blogs", () => {
     const blogsPreDelete = await helper.getBlogs()
     
     await api.delete(`/api/blogs/${blogsPreDelete[0].id}`)
+      .set("Authorization", token)
+
     blogsPreDelete.splice(0, 1)
 
     const blogsPostDelete = await helper.getBlogs()
 
     expect(blogsPostDelete).toEqual(blogsPreDelete)
+  })
+
+  test("trying to delete with invalid token returns 401", async () => {
+    const blogs = await helper.getBlogs()
+    await api.delete(`/api/blogs/${blogs[0].id}`)
+      .set("Authorization", `${token}0`)
+
+    await api.delete(`/api/blogs/${blogs[0].id}`)
+
+    await api.delete(`/api/blogs/${blogs[0].id}`)
+      .set("Authorization", token.substring(7))
+  })
+
+  test("trying to delete another user's blog returns 401", async () => {
+    const blogs = await helper.getBlogs()
+    await api.delete(`/api/blogs/${blogs[1].id}`)
+      .set("Authorization", `${token}`)
   })
 })
 

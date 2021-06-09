@@ -1,7 +1,6 @@
 require("express-async-errors")
 const jwt = require("jsonwebtoken")
 const config = require("../utils/config")
-const tokens = require("../utils/token-extractor")
 const blogsRouter = require("express").Router()
 const Blog = require("../models/blog")
 const User = require("../models/user")
@@ -42,8 +41,20 @@ blogsRouter.put("/:id", async (request, response) => {
 })
 
 blogsRouter.delete("/:id", async (request, response) => {
-  const result = await Blog.findByIdAndRemove(request.params.id)
-  response.status(204).json(result)
+  const token = request.token
+  const decoded = jwt.verify(token, config.TOKEN_SECRET)
+  if (!token || !decoded.id) {
+    return response.status(401).json({error: "token missing or invalid"})
+  }
+
+  const blog = await Blog.findById(request.params.id)
+
+  if (blog.user.toString() !== decoded.id) {
+    return response.status(401).json({error: "user unauthorized to delete blog"})
+  } else {
+    const result = await Blog.findByIdAndRemove(blog.id)
+    response.status(204).json(result)
+  }
 })
 
 module.exports = blogsRouter
