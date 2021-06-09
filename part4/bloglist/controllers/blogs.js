@@ -1,7 +1,7 @@
 require("express-async-errors")
 const jwt = require("jsonwebtoken")
 const config = require("../utils/config")
-const tokens = require("../utils/tokens")
+const tokens = require("../utils/token-extractor")
 const blogsRouter = require("express").Router()
 const Blog = require("../models/blog")
 const User = require("../models/user")
@@ -12,7 +12,7 @@ blogsRouter.get("/", async (request, response) => {
 })
 
 blogsRouter.post("/", async (request, response) => {
-  const token = tokens.getTokenFrom(request)
+  const token = request.token
   const decoded = jwt.verify(token, config.TOKEN_SECRET)
   if (!token || !decoded.id) {
     return response.status(401).json({error: "token missing or invalid"})
