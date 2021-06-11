@@ -65,11 +65,12 @@ const App = () => {
   const createBlog = async blog => {
     try {
       const response = await blogService.createNew(blog)
+      console.log(response)
       const copy = [...blogs]
       copy.push(response)
       setBlogs(copy)
       useNotification({message: `Created new blog ${response.title} by ${response.author}`})
-      toggleRef.toggleVisibility()
+      toggleRef.current.toggleVisibility()
     } catch (error) {
       useNotification({message: error.response.data.error || "Error creating blog", error: true})
     }
