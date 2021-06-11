@@ -20,7 +20,11 @@ const App = () => {
       const blogs = await blogService.getAll()
       setBlogs(blogs)
     } catch(error) {
-      useNotification({message: error.response.data.error || "Error fetching blogs", error: true})
+      if (error.response) { 
+        useNotification({message: error.response.data.error || "Error fetching blogs", error: true})
+      } else {
+        useNotification({message: "Couldn't reach API to fetch users", error: true})
+      }
     }
   }, [])
 
