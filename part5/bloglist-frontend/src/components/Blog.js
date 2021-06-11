@@ -1,6 +1,6 @@
 import React, {useState} from "react"
 
-const Blog = ({blog, handleLike}) => {
+const Blog = ({blog, currentUsername, handleLike, handleRemove}) => {
   const [showDetail, setShowDetail] = useState(false)
 
   const blogStyle = {
@@ -30,10 +30,17 @@ const Blog = ({blog, handleLike}) => {
     </div>
   )
 
+  const removeButton = () => (
+    <button onClick={() => handleRemove(blog)}>
+      Remove
+    </button>
+  )
+
   return(
     <div style={blogStyle}>
       {!showDetail && compactView()}
       {showDetail && detailView()}
+      {(currentUsername === blog.user.username) && removeButton()}
     </div>  
   )
 }

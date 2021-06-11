@@ -82,16 +82,33 @@ const App = () => {
   }
 
   const handleLike = async blog => {
-    await blogService.like(blog)
-    const copy = [...blogs]
-    for (let item of copy) {
-      if (item.id === blog.id) {
-        item.likes++
-        break
+    try {
+      await blogService.like(blog)
+      const copy = [...blogs]
+      for (let item of copy) {
+        if (item.id === blog.id) {
+          item.likes++
+          break
+        }
       }
+      copy.sort((a, b) => b.likes - a.likes)
+      setBlogs(copy)
+      useNotification({message: `Liked blog ${blog.title} by ${blog.author}`})
+    } catch (error) {
+      useNotification({message: error.response.data.error || "Error liking blog", error: true})
     }
-    copy.sort((a, b) => b.likes - a.likes)
-    setBlogs(copy)
+  }
+
+  const handleRemove = async blog => {
+    window.confirm(`Are you sure you want to remove blog ${blog.title} by ${blog.author}`)
+    try {
+      await blogService.remove(blog)
+      const copy = blogs.filter(item => item.id !== blog.id)
+      setBlogs(copy)
+      useNotification({message: `Deleted blog ${blog.title} by ${blog.author}`})
+    } catch (error) {
+      useNotification({message: error.response.data.error || "Error deleting blog", error: true})
+    }
   }
 
   const loginForm = () => (
@@ -115,7 +132,7 @@ const App = () => {
       <br/>
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} handleLike={handleLike}/>
+          <Blog key={blog.id} blog={blog} currentUsername={user.username} handleLike={handleLike} handleRemove={handleRemove}/>
         )}
       </div>
     </div>
