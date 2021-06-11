@@ -16,8 +16,12 @@ const App = () => {
   const toggleRef = useRef()
 
   useEffect(async () => {
-    const blogs = await blogService.getAll()
-    setBlogs(blogs)
+    try {
+      const blogs = await blogService.getAll()
+      setBlogs(blogs)
+    } catch(error) {
+      useNotification({message: error.response.data.error || "Error fetching blogs", error: true})
+    }
   }, [])
 
   useEffect(async () => {
@@ -47,7 +51,7 @@ const App = () => {
       setUser(user)
       useNotification({message: `Logged in successfully as ${user.username}`})
     } catch (error) {
-      useNotification({message: error.response.data.error, error: true})
+      useNotification({message: error.response.data.error || "Error logging in", error: true})
     }
   }
 
@@ -67,7 +71,7 @@ const App = () => {
       useNotification({message: `Created new blog ${response.title} by ${response.author}`})
       toggleRef.toggleVisibility()
     } catch (error) {
-      useNotification({message: error.response.data.error, error: true})
+      useNotification({message: error.response.data.error || "Error creating blog", error: true})
     }
   }
 
