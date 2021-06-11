@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import Blog from "./components/Blog"
 import Login from "./components/Login"
 import NewBlog from "./components/NewBlog"
 import Notification from "./components/Notification"
+import Togglable from "./components/Togglable"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 
@@ -12,6 +13,7 @@ const App = () => {
   const [notification, setNotification] = useState(undefined)
   const [notificationTimeout, setNotificationTimeout] = useState(null)
 
+  const toggleRef = useRef()
 
   useEffect(async () => {
     const blogs = await blogService.getAll()
@@ -63,6 +65,7 @@ const App = () => {
       copy.push(response)
       setBlogs(copy)
       useNotification({message: `Created new blog ${response.title} by ${response.author}`})
+      toggleRef.toggleVisibility()
     } catch (error) {
       useNotification({message: error.response.data.error, error: true})
     }
@@ -82,8 +85,10 @@ const App = () => {
       <button onClick={() => handleLogout()}>
         Logout
       </button>
-      <h2>Create new</h2>
-      <NewBlog createBlog={createBlog}/>
+      <Togglable buttonLabel="Create new blog" ref={toggleRef}>
+        <h2>Create new</h2>
+        <NewBlog createBlog={createBlog}/>
+      </Togglable>
       <br/>
       <div>
         {blogs.map(blog =>
