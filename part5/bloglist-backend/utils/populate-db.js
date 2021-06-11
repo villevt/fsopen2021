@@ -5,8 +5,13 @@ const helper = require("../tests/test_helper")
 console.log("Initializing DB with test data..")
 
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
-helper.initializeUsers()
-helper.initializeBlogs()
+const init = async () => {
+  await helper.initializeUsers()
+  await helper.initializeBlogs()
 
-console.log("Done!")
-process.exit()
+  mongoose.connection.close()
+
+  console.log("Done!")
+  process.exit()
+}
+init()
