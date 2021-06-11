@@ -18,6 +18,7 @@ const App = () => {
   useEffect(async () => {
     try {
       const blogs = await blogService.getAll()
+      blogs.sort((a, b) => b.likes - a.likes)
       setBlogs(blogs)
     } catch(error) {
       if (error.response) { 
@@ -89,6 +90,7 @@ const App = () => {
         break
       }
     }
+    copy.sort((a, b) => b.likes - a.likes)
     setBlogs(copy)
   }
 
