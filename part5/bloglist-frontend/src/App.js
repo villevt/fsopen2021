@@ -13,14 +13,14 @@ const App = () => {
   const [notificationTimeout, setNotificationTimeout] = useState(null)
 
 
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+  useEffect(async () => {
+    const blogs = await blogService.getAll()
+    console.log(blogs)
+    setBlogs(blogs)
   }, [])
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBloglistUser")
+  useEffect(async () => {
+    const loggedUserJSON = await window.localStorage.getItem("loggedBloglistUser")
     if (loggedUserJSON) {
       const loggedUser = JSON.parse(loggedUserJSON)
       setUser(loggedUser)
@@ -46,7 +46,7 @@ const App = () => {
       setUser(user)
       useNotification({message: `Logged in successfully as ${user.username}`})
     } catch (error) {
-      console.log(error)
+      console.error(error.error)
       useNotification({message: error.message, error: true})
     }
   }
