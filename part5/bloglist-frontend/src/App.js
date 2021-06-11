@@ -80,6 +80,18 @@ const App = () => {
     }
   }
 
+  const handleLike = async blog => {
+    await blogService.like(blog)
+    const copy = [...blogs]
+    for (let item of copy) {
+      if (item.id === blog.id) {
+        item.likes++
+        break
+      }
+    }
+    setBlogs(copy)
+  }
+
   const loginForm = () => (
     <div>
       <h2>Log in to application</h2>
@@ -101,7 +113,7 @@ const App = () => {
       <br/>
       <div>
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} handleLike={handleLike}/>
         )}
       </div>
     </div>

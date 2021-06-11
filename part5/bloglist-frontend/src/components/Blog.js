@@ -1,19 +1,12 @@
 import React, {useState} from "react"
-import blogs from "../services/blogs"
 
-const Blog = ({blog}) => {
+const Blog = ({blog, handleLike}) => {
   const [showDetail, setShowDetail] = useState(false)
-  const [likes, setLikes] = useState(blog.likes)
 
   const blogStyle = {
     border: "2px solid black",
     padding: "2px",
     margin: "2px  "
-  }
-
-  const handleLike = async () => {
-    await blogs.like(blog)
-    setLikes(++blog.likes)
   }
 
   const compactView = () => (
@@ -30,8 +23,8 @@ const Blog = ({blog}) => {
       <br/>
       {blog.url}
       <br/>
-      Likes {likes}
-      <button onClick={() => handleLike()}>Like</button>
+      Likes {blog.likes}
+      <button onClick={() => handleLike(blog)}>Like</button>
       <br/>
       {blog.user.name}
     </div>
