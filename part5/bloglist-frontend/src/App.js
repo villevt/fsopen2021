@@ -15,7 +15,6 @@ const App = () => {
 
   useEffect(async () => {
     const blogs = await blogService.getAll()
-    console.log(blogs)
     setBlogs(blogs)
   }, [])
 
@@ -46,8 +45,7 @@ const App = () => {
       setUser(user)
       useNotification({message: `Logged in successfully as ${user.username}`})
     } catch (error) {
-      console.error(error.error)
-      useNotification({message: error.message, error: true})
+      useNotification({message: error.response.data.error, error: true})
     }
   }
 
@@ -66,8 +64,7 @@ const App = () => {
       setBlogs(copy)
       useNotification({message: `Created new blog ${response.title} by ${response.author}`})
     } catch (error) {
-      console.log(error)
-      useNotification({message: error.message, error: true})
+      useNotification({message: error.response.data.error, error: true})
     }
   }
 
