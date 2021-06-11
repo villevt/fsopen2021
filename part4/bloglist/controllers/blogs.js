@@ -1,9 +1,6 @@
 require("express-async-errors")
-const jwt = require("jsonwebtoken")
-const config = require("../utils/config")
 const blogsRouter = require("express").Router()
 const Blog = require("../models/blog")
-const User = require("../models/user")
 
 blogsRouter.get("/", async (request, response) => {
   const blogs = await Blog.find({}).populate("user", {username: true, name: true, id: true})
