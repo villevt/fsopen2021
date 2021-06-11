@@ -66,4 +66,20 @@ describe("<Blog />", () => {
       "300"
     )
   })
+
+  test("when like is pressed twice, the event handler is called twice", () => {
+    const likeHandler = jest.fn()
+
+    const component = render(
+      <Blog blog={blog} currentUsername={currentUsername} handleLike={likeHandler} handleRemove={handleRemove}/>
+    )
+
+    fireEvent.click(component.getByText("view"))
+  
+    const like = component.getByText("Like")
+    fireEvent.click(like)
+    fireEvent.click(like)
+
+    expect(likeHandler.mock.calls).toHaveLength(2)
+  })
 })
