@@ -39,7 +39,9 @@ describe("Blog app", function() {
         .find("button")
         .click()
       
-      cy.contains("Logged in")
+      cy.get(".notification")
+        .contains("Logged in")
+        .and("have.css", "background-color", "rgb(0, 128, 0)")
     })
 
     it("fails with wrong credentials", function() {
@@ -53,7 +55,9 @@ describe("Blog app", function() {
         .find("button")
         .click()
       
-      cy.contains("Invalid username or password")
+      cy.get(".notification")
+        .contains("Invalid username or password")
+        .and("have.css", "background-color", "rgb(255, 0, 0)")
     })
   })
 })
