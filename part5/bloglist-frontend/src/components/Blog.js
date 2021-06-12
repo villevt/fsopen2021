@@ -24,7 +24,7 @@ const Blog = ({blog, currentUsername, handleLike, handleRemove}) => {
       <br/>
       {blog.url}
       <br/>
-      Likes {blog.likes}
+      <span className="likes">Likes {blog.likes}</span>
       <button onClick={() => handleLike(blog)}>Like</button>
       <br/>
       {blog.user.name}

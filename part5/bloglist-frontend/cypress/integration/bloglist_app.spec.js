@@ -61,7 +61,7 @@ describe("Blog app", function() {
     })
   })
 
-  describe.only("When logged in", function() {
+  describe("When logged in", function() {
     beforeEach(function() {
       cy.login({username: user.username, password: user.password})
     })
@@ -85,6 +85,29 @@ describe("Blog app", function() {
       cy.get(".blog")
         .should("contain", "Sometitle")
         .and("contain", "Someauthor")
+    })
+
+    it.only("A blog can be liked", function() {
+      cy.get(".blog").first()
+        .contains("view")
+        .click()
+
+      cy.get(".blog").first()
+        .contains("Like")
+        .click()
+
+      cy.get(".blog").first().find(".likes").then(likes => {
+        const likesBefore = likes.text()
+
+        cy.get(".blog").first()
+          .contains(/^Like$/)
+          .click()
+
+        cy.get(".blog").first()
+          .find(".likes")
+          .contains(parseInt(likesBefore.substring(6)) + 1)
+      })
+        
     })
   })
 })
