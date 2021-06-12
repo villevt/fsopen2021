@@ -38,7 +38,7 @@ const Blog = ({blog, currentUsername, handleLike, handleRemove}) => {
   )
 
   return(
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       {!showDetail && compactView()}
       {showDetail && detailView()}
       {(currentUsername === blog.user.username) && removeButton()}

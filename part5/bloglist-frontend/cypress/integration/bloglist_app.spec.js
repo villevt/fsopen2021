@@ -60,4 +60,35 @@ describe("Blog app", function() {
         .and("have.css", "background-color", "rgb(255, 0, 0)")
     })
   })
+
+  describe.only("When logged in", function() {
+    beforeEach(function() {
+      cy.request("POST", "http://localhost:3003/api/login", {username: user.username, password: user.password})
+        .then(response => {
+          window.localStorage.setItem("loggedBloglistUser", JSON.stringify(response.body))
+          cy.visit("http://localhost:3000")
+        })
+    })
+
+    it("A blog can be created", function() {
+      cy.contains("Create new blog").click()
+      cy.get("form")
+        .find("input[name=\"Title\"]").type("Sometitle")
+
+      cy.get("form")
+        .find("input[name=\"Author\"]").type("Someauthor")
+
+      cy.get("form")
+        .find("input[name=\"Url\"]").type("http.com")
+
+      cy.get("form")
+        .find("button")
+        .contains("Create")
+        .click()
+
+      cy.get(".blog")
+        .should("contain", "Sometitle")
+        .and("contain", "Someauthor")
+    })
+  })
 })
