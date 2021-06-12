@@ -64,6 +64,8 @@ describe("Blog app", function() {
   describe("When logged in", function() {
     beforeEach(function() {
       cy.login({username: user.username, password: user.password})
+      cy.addBlog("SomeTitle", "SomeAuthor", "Url")
+      cy.visit("http://localhost:3000")
     })
 
     it("A blog can be created", function() {
@@ -87,7 +89,7 @@ describe("Blog app", function() {
         .and("contain", "Someauthor")
     })
 
-    it.only("A blog can be liked", function() {
+    it("A blog can be liked", function() {
       cy.get(".blog").first()
         .contains("view")
         .click()
@@ -106,8 +108,35 @@ describe("Blog app", function() {
         cy.get(".blog").first()
           .find(".likes")
           .contains(parseInt(likesBefore.substring(6)) + 1)
+      })    
+    })
+
+    it("User can remove their own blog", function() {
+      cy.get(".blog").each(blog => {
+        cy.wrap(blog)
+          .contains("view")
+          .click()
       })
-        
+
+      cy.get(".blog").contains(user.name).as("blogToBeRemoved")
+
+      cy.get("@blogToBeRemoved").next().click()
+
+      cy.get("@blogToBeRemoved").should("not.exist")
+    })
+
+    it.only("User cannot remove other users' blogs", function() {
+      cy.get(".blog").each(blog => {
+        cy.wrap(blog)
+          .contains("view")
+          .click()
+      })
+
+      cy.get(".blog")
+        .find("div")
+        .not(`div[data-user="${user.name}"]`)
+        .contains("Remove")
+        .should("not.exist")
     })
   })
 })

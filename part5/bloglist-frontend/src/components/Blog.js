@@ -18,7 +18,7 @@ const Blog = ({blog, currentUsername, handleLike, handleRemove}) => {
   )
 
   const detailView = () => (
-    <div>
+    <div data-user={`${blog.user.name}`}>
       {blog.title} {blog.author}
       <button onClick={() => setShowDetail(false)}>hide</button>
       <br/>
