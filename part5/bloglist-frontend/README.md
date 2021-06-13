@@ -8,3 +8,5 @@ Made in React, tested with Jest and Cypress.
 * Ability to like blogs (blogs are ordered according to likes)
 * Creating new blogs
 * Removing blogs posted by the user
+
+![](bloglist-frontend.png)
