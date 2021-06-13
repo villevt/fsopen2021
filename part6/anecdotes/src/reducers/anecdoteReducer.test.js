@@ -3,8 +3,6 @@ import anecdoteReducer, {voteAnecdote} from "./anecdoteReducer"
 
 describe("anecdote reducer", () => {
   test("the state is defined even if no initial state is passed to the reducer", () => {
-    const state = {}
-
     const newState = anecdoteReducer(undefined, "NONE")
     expect(newState).toBeDefined()
     expect(newState.length).toBeGreaterThanOrEqual(1)
@@ -14,7 +12,7 @@ describe("anecdote reducer", () => {
     const initialState = anecdoteReducer(undefined, "NONE")
 
     deepFreeze(initialState)
-    const action = voteAnecdote(initialState[0])
+    const action = voteAnecdote(initialState[0].id)
     const newState = anecdoteReducer(initialState, action)
 
     expect(newState[0].votes).toEqual(1)
@@ -25,7 +23,7 @@ describe("anecdote reducer", () => {
     const initialState = anecdoteReducer(undefined, "NONE")
 
     deepFreeze(initialState)
-    const action = voteAnecdote(initialState[0])
+    const action = voteAnecdote(initialState[0].id)
     const newState = anecdoteReducer(initialState, action)
 
     expect(newState.slice(1)).toEqual(initialState.slice(1))
@@ -35,7 +33,7 @@ describe("anecdote reducer", () => {
     const initialState = anecdoteReducer(undefined, "NONE")
 
     deepFreeze(initialState)
-    const action = voteAnecdote(initialState[0])
+    const action = voteAnecdote(initialState[0].id)
     const newState = anecdoteReducer(initialState, action)
 
     expect(newState[0].content).toBe(initialState[0].content)
