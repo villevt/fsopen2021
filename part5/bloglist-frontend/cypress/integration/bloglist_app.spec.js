@@ -125,7 +125,7 @@ describe("Blog app", function() {
       cy.get("@blogToBeRemoved").should("not.exist")
     })
 
-    it.only("User cannot remove other users' blogs", function() {
+    it("User cannot remove other users' blogs", function() {
       cy.get(".blog").each(blog => {
         cy.wrap(blog)
           .contains("view")
@@ -137,6 +137,23 @@ describe("Blog app", function() {
         .not(`div[data-user="${user.name}"]`)
         .contains("Remove")
         .should("not.exist")
+    })
+
+    it("Blogs are ordered according to likes", function() {
+      cy.get(".blog").each(blog => {
+        cy.wrap(blog)
+          .contains("view")
+          .click()
+      })
+
+      cy.get(".blog").find(".likes").then(blogs => {
+        for (let i = 0; i < blogs.length - 1; i++) {
+          const a = parseInt(blogs.eq(i).text().substring(6))
+          const b = parseInt(blogs.eq(i+1).text().substring(6))
+
+          cy.wrap(a).should("be.gte", b)
+        }
+      })
     })
   })
 })
