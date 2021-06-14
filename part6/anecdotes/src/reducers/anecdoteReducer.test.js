@@ -1,5 +1,6 @@
 import deepFreeze from "deep-freeze"
-import anecdoteReducer, {voteAnecdote, addAnecdote} from "./anecdoteReducer"
+import anecdoteReducer, {voteAnecdote, addAnecdote, initializeAnecdotes} from "./anecdoteReducer"
+import anecdoteService from "../services/anecdotes"
 
 describe("anecdote reducer", () => {
   const initialState = anecdoteReducer(undefined, "NONE")
@@ -62,6 +63,16 @@ describe("anecdote reducer", () => {
       const newState = anecdoteReducer(initialState, action)
 
       expect(newState).toHaveLength(initialState.length + 1)
+    })
+  })
+
+  describe("initializing", () => {
+    test("initialized anecdotes match the initialization data", async () => {
+      const anecdotes = await anecdoteService.getAll()
+      const action = initializeAnecdotes(anecdotes)
+
+      const newState = anecdoteReducer(initialState, action)
+      expect(newState).toEqual(anecdotes)
     })
   })
 })
