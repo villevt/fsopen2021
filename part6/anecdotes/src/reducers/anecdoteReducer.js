@@ -25,15 +25,24 @@ const reducer = (state = initialState, action) => {
       const newAnecdote = {...state.filter(anecdote => anecdote.id === action.data)[0]}
       newAnecdote.votes++
       return state.map(anecdote => anecdote.id === newAnecdote.id ? newAnecdote : anecdote)
+    } case "ADD": {
+      return state.concat(asObject(action.data))
     }
     default: return state
   }
 }
 
-export const voteAnecdote = (id) => {
+export const voteAnecdote = id => {
   return {
     type: "VOTE",
     data: id
+  }
+}
+
+export const addAnecdote = content => {
+  return {
+    type: "ADD",
+    data: content
   }
 }
 
