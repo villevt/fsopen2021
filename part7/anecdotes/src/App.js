@@ -1,36 +1,9 @@
 import React, { useState } from "react"
-import PropTypes from "prop-types"
-import { Switch, Route, Link, Redirect, useRouteMatch } from "react-router-dom"
-
-const Menu = () => {
-  const padding = {
-    paddingRight: 5
-  }
-  return (
-    <div>
-      <Link to="/" style={padding}>anecdotes</Link>
-      <Link to ="/create" style={padding}>create new</Link>
-      <Link to ="/about" style={padding}>about</Link>
-    </div>
-  )
-}
-
-const AnecdoteList = ({ anecdotes }) => (
-  <div>
-    <h2>Anecdotes</h2>
-    <ul>
-      {anecdotes.map(anecdote =>
-        <li key={anecdote.id} >
-          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
-        </li>
-      )}
-    </ul>
-  </div>
-)
-
-AnecdoteList.propTypes = {
-  anecdotes: PropTypes.array.isRequired
-}
+import { Switch, Route, useRouteMatch } from "react-router-dom"
+import Anecdote from "./components/Anecdote"
+import AnecdoteList from "./components/AnecdoteList"
+import CreateNew from "./components/CreateNew"
+import Menu from "./components/Menu"
 
 const About = () => (
   <div>
@@ -53,56 +26,6 @@ const Footer = () => (
     See <a href="https://github.com/fullstack-hy/routed-anecdotes/blob/master/src/App.js">https://github.com/fullstack-hy2019/routed-anecdotes/blob/master/src/App.js</a> for the source code.
   </div>
 )
-
-const CreateNew = ({addNew}) => {
-  const [content, setContent] = useState("")
-  const [author, setAuthor] = useState("")
-  const [info, setInfo] = useState("")
-  const [submitted, setSubmitted] = useState(false)
-
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    addNew({
-      content,
-      author,
-      info,
-      votes: 0
-    })
-    setSubmitted(true)
-  }
-
-  if (submitted) {
-    return (
-      <Redirect to="/" />
-    )
-  } else {
-    return (
-      <div>
-        <h2>create a new anecdote</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            content
-            <input name="content" value={content} onChange={(e) => setContent(e.target.value)} />
-          </div>
-          <div>
-            author
-            <input name="author" value={author} onChange={(e) => setAuthor(e.target.value)} />
-          </div>
-          <div>
-            url for more info
-            <input name="info" value={info} onChange={(e)=> setInfo(e.target.value)} />
-          </div>
-          <button>create</button>
-        </form>
-      </div>
-    ) 
-  }
-}
-
-CreateNew.propTypes = {
-  addNew: PropTypes.func.isRequired
-}
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -163,11 +86,7 @@ const App = () => {
       {notification}
       <Switch>
         <Route path="/anecdotes/:id">
-          <h2>{anecdote.content}</h2>
-          <p>has {anecdote.votes} votes</p>
-          <p>for more info see 
-            <a href={anecdote.info}>{anecdote.info}</a>
-          </p>
+          <Anecdote anecdote={anecdote} />
         </Route>
         <Route path="/about">
           <About />
