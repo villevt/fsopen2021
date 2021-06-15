@@ -21,6 +21,13 @@ const CreateNew = ({addNew}) => {
     setSubmitted(true)
   }
 
+  const handleReset = (e) => {
+    e.preventDefault()
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
   if (submitted) {
     return (
       <Redirect to="/" />
@@ -43,6 +50,7 @@ const CreateNew = ({addNew}) => {
             <input {...info} />
           </div>
           <button>create</button>
+          <button onClick={handleReset}>reset</button>
         </form>
       </div>
     ) 
