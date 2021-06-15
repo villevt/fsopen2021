@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom"
+import { Switch, Route, Link, Redirect, useRouteMatch } from "react-router-dom"
 
 const Menu = () => {
   const padding = {
@@ -19,7 +19,11 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote =>
+        <li key={anecdote.id} >
+          <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+        </li>
+      )}
     </ul>
   </div>
 )
@@ -54,6 +58,7 @@ const CreateNew = ({addNew}) => {
   const [content, setContent] = useState("")
   const [author, setAuthor] = useState("")
   const [info, setInfo] = useState("")
+  const [submitted, setSubmitted] = useState(false)
 
 
   const handleSubmit = (e) => {
@@ -64,28 +69,35 @@ const CreateNew = ({addNew}) => {
       info,
       votes: 0
     })
+    setSubmitted(true)
   }
 
-  return (
-    <div>
-      <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          content
-          <input name="content" value={content} onChange={(e) => setContent(e.target.value)} />
-        </div>
-        <div>
-          author
-          <input name="author" value={author} onChange={(e) => setAuthor(e.target.value)} />
-        </div>
-        <div>
-          url for more info
-          <input name="info" value={info} onChange={(e)=> setInfo(e.target.value)} />
-        </div>
-        <button>create</button>
-      </form>
-    </div>
-  )
+  if (submitted) {
+    return (
+      <Redirect to="/" />
+    )
+  } else {
+    return (
+      <div>
+        <h2>create a new anecdote</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            content
+            <input name="content" value={content} onChange={(e) => setContent(e.target.value)} />
+          </div>
+          <div>
+            author
+            <input name="author" value={author} onChange={(e) => setAuthor(e.target.value)} />
+          </div>
+          <div>
+            url for more info
+            <input name="info" value={info} onChange={(e)=> setInfo(e.target.value)} />
+          </div>
+          <button>create</button>
+        </form>
+      </div>
+    ) 
+  }
 }
 
 CreateNew.propTypes = {
@@ -117,10 +129,10 @@ const App = () => {
     setAnecdotes(anecdotes.concat(anecdote))
   }
 
-  /*const anecdoteById = (id) =>
+  const anecdoteById = (id) =>
     anecdotes.find(a => a.id === id)
 
-  const vote = (id) => {
+  /*const vote = (id) => {
     const anecdote = anecdoteById(id)
 
     const voted = {
@@ -131,23 +143,33 @@ const App = () => {
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }*/
 
+  const match = useRouteMatch("/anecdotes/:id")
+  const anecdote = match
+    ? anecdoteById(match.params.id)
+    : {}
+
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Router>
-        <Menu />
-        <Switch>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/create">
-            <CreateNew addNew={addNew} /><AnecdoteList anecdotes={anecdotes} />
-          </Route>
-          <Route path="/">
-            <AnecdoteList anecdotes={anecdotes} />
-          </Route>
-        </Switch>
-      </Router>
+      <Menu />
+      <Switch>
+        <Route path="/anecdotes/:id">
+          <h2>{anecdote.content}</h2>
+          <p>has {anecdote.votes} votes</p>
+          <p>for more info see 
+            <a href={anecdote.info}>{anecdote.info}</a>
+          </p>
+        </Route>
+        <Route path="/about">
+          <About />
+        </Route>
+        <Route path="/create">
+          <CreateNew addNew={addNew} />
+        </Route>
+        <Route path="/">
+          <AnecdoteList anecdotes={anecdotes} />
+        </Route>
+      </Switch>
       <Footer />
     </div>
   )
