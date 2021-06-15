@@ -19,7 +19,7 @@ const Filter = ({changeFilter}) => {
 }
 
 Filter.propTypes = {
-  changeFilter: PropTypes.func
+  changeFilter: PropTypes.func.isRequired
 }
 
 const ConnectedFilter = connect(null, {changeFilter})(Filter)

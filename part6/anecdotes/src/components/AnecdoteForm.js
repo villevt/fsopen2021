@@ -1,15 +1,14 @@
 import React from "react"
-import { useDispatch } from "react-redux"
+import PropTypes from "prop-types"
+import { connect } from "react-redux"
 import { addAnecdote } from "../reducers/anecdoteReducer"
 import { changeNotification } from "../reducers/notificationReducer"
 
-const AnecdoteForm = () => {
-  const dispatch = useDispatch()
-
+const AnecdoteForm = ({addAnecdote}) => {
   const handleForm = async event => {
     event.preventDefault()
-    await dispatch(addAnecdote(event.target.anecdote.value))
-    dispatch(changeNotification("You added a new anecdote.", 5))
+    await addAnecdote(event.target.anecdote.value)
+    changeNotification("You added a new anecdote.", 5)
   }
 
   return (
@@ -25,4 +24,11 @@ const AnecdoteForm = () => {
   )
 }
 
-export default AnecdoteForm
+AnecdoteForm.propTypes = {
+  addAnecdote: PropTypes.func.isRequired,
+  changeNotification: PropTypes.func.isRequired
+}
+
+const ConnectedAnecdoteForm = connect(null, {addAnecdote, changeNotification})(AnecdoteForm)
+
+export default ConnectedAnecdoteForm
