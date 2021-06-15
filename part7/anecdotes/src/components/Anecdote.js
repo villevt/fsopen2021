@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-const Anecdote = anecdote => (
+const Anecdote = ({anecdote}) => (
   <div>
     <h2>{anecdote.content}</h2>
     <p>has {anecdote.votes} votes</p>
