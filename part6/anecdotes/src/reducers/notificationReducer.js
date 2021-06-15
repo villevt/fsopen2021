@@ -8,14 +8,17 @@ const reducer = (state = "", action) => {
   }
 }
 
+let timeout
+
 export const changeNotification = (message, seconds) => {
   return async dispatch => {
+    clearTimeout(timeout)
     dispatch({
       type: "CHANGE_NOTIFICATION",
       data: message
     })
 
-    await setTimeout(() => {
+    timeout = await setTimeout(() => {
       dispatch({
         type: "RESET_NOTIFICATION"
       })
