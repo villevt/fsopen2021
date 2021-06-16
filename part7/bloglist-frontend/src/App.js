@@ -1,34 +1,26 @@
-import React, { useState, useEffect, useRef } from "react"
-import { useDispatch } from "react-redux"
+import React, { useState, useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import Blog from "./components/Blog"
 import Login from "./components/Login"
 import NewBlog from "./components/NewBlog"
 import Notification from "./components/Notification"
-import Togglable from "./components/Togglable"
+import { initBlogs } from "./reducers/blogs"
 import { setNotification } from "./reducers/notification"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
   const dispatch = useDispatch()
-
-  const toggleRef = useRef()
+  const blogs = useSelector(state => state.blogs)
+  const [user, setUser] = useState(null)
 
   useEffect(async () => {
-    try {
-      const blogs = await blogService.getAll()
-      blogs.sort((a, b) => b.likes - a.likes)
-      setBlogs(blogs)
-    } catch(error) {
-      if (error.response) { 
-        dispatch(setNotification({message: error.response.data.error || "Error fetching blogs", error: true}, 3))
-      } else {
-        dispatch(setNotification({message: "Couldn't reach API to fetch users", error: true}, 3))
-      }
-    }
+    await dispatch(initBlogs())
   }, [])
+
+  const setBlogs = blogs => {
+    console.log(blogs)
+  }
 
   useEffect(async () => {
     const loggedUserJSON = await window.localStorage.getItem("loggedBloglistUser")
@@ -58,19 +50,6 @@ const App = () => {
     blogService.setToken("")
     window.localStorage.removeItem("loggedBloglistUser")
     dispatch(setNotification({message: "Logged out"}, 3))
-  }
-  
-  const createBlog = async blog => {
-    try {
-      const response = await blogService.createNew(blog)
-      const copy = [...blogs]
-      copy.push(response)
-      setBlogs(copy)
-      dispatch(setNotification({message: `Created new blog ${response.title} by ${response.author}`}, 3))
-      toggleRef.current.toggleVisibility()
-    } catch (error) {
-      dispatch(setNotification({message: error.response.data.error || "Error creating blog", error: true}, 3))
-    }
   }
 
   const handleLike = async blog => {
@@ -117,13 +96,10 @@ const App = () => {
       <button onClick={() => handleLogout()}>
         Logout
       </button>
-      <Togglable buttonLabel="Create new blog" ref={toggleRef}>
-        <h2>Create new</h2>
-        <NewBlog createBlog={createBlog}/>
-      </Togglable>
+      <NewBlog />
       <br/>
       <div>
-        {blogs.map(blog =>
+        {blogs && blogs.map(blog =>
           <Blog key={blog.id} blog={blog} currentUsername={user.username} handleLike={handleLike} handleRemove={handleRemove}/>
         )}
       </div>
