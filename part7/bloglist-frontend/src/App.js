@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from "react"
+import { useDispatch } from "react-redux"
 import Blog from "./components/Blog"
 import Login from "./components/Login"
 import NewBlog from "./components/NewBlog"
 import Notification from "./components/Notification"
 import Togglable from "./components/Togglable"
+import { setNotification } from "./reducers/notification"
 import blogService from "./services/blogs"
 import loginService from "./services/login"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState(undefined)
-  const [notificationTimeout, setNotificationTimeout] = useState(null)
+  const dispatch = useDispatch()
 
   const toggleRef = useRef()
 
@@ -22,9 +23,9 @@ const App = () => {
       setBlogs(blogs)
     } catch(error) {
       if (error.response) { 
-        useNotification({message: error.response.data.error || "Error fetching blogs", error: true})
+        dispatch(setNotification({message: error.response.data.error || "Error fetching blogs", error: true}, 3))
       } else {
-        useNotification({message: "Couldn't reach API to fetch users", error: true})
+        dispatch(setNotification({message: "Couldn't reach API to fetch users", error: true}, 3))
       }
     }
   }, [])
@@ -38,14 +39,6 @@ const App = () => {
     }
   }, [])
 
-  const useNotification = newNotification => {
-    if (notificationTimeout) {
-      clearTimeout(notificationTimeout)
-    }
-    setNotification(newNotification)
-    setNotificationTimeout(setTimeout(setNotification, 3000, undefined))
-  }
-
   const handleLogin = async (username, password) => {
     try {
       const user = await loginService.login({username, password})
@@ -54,9 +47,9 @@ const App = () => {
       )
       blogService.setToken(user.token)
       setUser(user)
-      useNotification({message: `Logged in successfully as ${user.username}`})
+      dispatch(setNotification({message: `Logged in successfully as ${user.username}`}, 3))
     } catch (error) {
-      useNotification({message: error.response.data.error || "Error logging in", error: true})
+      dispatch(setNotification({message: error.response.data.error || "Error logging in", error: true}, 3))
     }
   }
 
@@ -64,20 +57,19 @@ const App = () => {
     setUser(null)
     blogService.setToken("")
     window.localStorage.removeItem("loggedBloglistUser")
-    useNotification({message: "Logged out"})
+    dispatch(setNotification({message: "Logged out"}, 3))
   }
   
   const createBlog = async blog => {
     try {
       const response = await blogService.createNew(blog)
-      console.log(response)
       const copy = [...blogs]
       copy.push(response)
       setBlogs(copy)
-      useNotification({message: `Created new blog ${response.title} by ${response.author}`})
+      dispatch(setNotification({message: `Created new blog ${response.title} by ${response.author}`}, 3))
       toggleRef.current.toggleVisibility()
     } catch (error) {
-      useNotification({message: error.response.data.error || "Error creating blog", error: true})
+      dispatch(setNotification({message: error.response.data.error || "Error creating blog", error: true}, 3))
     }
   }
 
@@ -93,9 +85,9 @@ const App = () => {
       }
       copy.sort((a, b) => b.likes - a.likes)
       setBlogs(copy)
-      useNotification({message: `Liked blog ${blog.title} by ${blog.author}`})
+      dispatch(setNotification({message: `Liked blog ${blog.title} by ${blog.author}`}, 3))
     } catch (error) {
-      useNotification({message: error.response.data.error || "Error liking blog", error: true})
+      dispatch(setNotification({message: error.response.data.error || "Error liking blog", error: true}, 3))
     }
   }
 
@@ -105,9 +97,9 @@ const App = () => {
       await blogService.remove(blog)
       const copy = blogs.filter(item => item.id !== blog.id)
       setBlogs(copy)
-      useNotification({message: `Deleted blog ${blog.title} by ${blog.author}`})
+      dispatch(setNotification({message: `Deleted blog ${blog.title} by ${blog.author}`}, 3))
     } catch (error) {
-      useNotification({message: error.response.data.error || "Error deleting blog", error: true})
+      dispatch(setNotification({message: error.response.data.error || "Error deleting blog", error: true}, 3))
     }
   }
 
@@ -140,7 +132,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification notification={notification}/>
+      <Notification />
       {user === null 
         ? loginForm()
         : appMain()
