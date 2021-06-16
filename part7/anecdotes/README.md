@@ -8,3 +8,5 @@ Another remake of the anecdote app. This time, the content is laid across multip
 * Form to create new anecdotes
 * About page explaining what anecdotes are
 * Menu at top to seamlessly toggle between the list, creation, and about pages
+
+![](anecdotes.png)
