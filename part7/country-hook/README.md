@@ -6,4 +6,4 @@ Modified version of earlier "countrylist" application. Done with custom react ho
 * Displays information from REST Countries api by full country name search
 * Informs the user if no country is found
 
-![]("country-hook.png")
+![](country-hook.png)
