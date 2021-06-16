@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react"
+import PropTypes from "prop-types"
 import axios from "axios"
 
 const useField = (type) => {
@@ -18,7 +19,19 @@ const useField = (type) => {
 const useCountry = (name) => {
   const [country, setCountry] = useState(null)
 
-  useEffect(() => {})
+  useEffect(async () => {
+    if (name != "") {
+      try {
+        const response = await axios.get(`https://restcountries.eu/rest/v2/name/${name}?fullText=true`)
+        setCountry({
+          data: {...response.data[0]},
+          found: true
+        })
+      } catch (e) {
+        setCountry({found: false})
+      }
+    }
+  }, [name])
 
   return country
 }
@@ -44,6 +57,10 @@ const Country = ({ country }) => {
       <img src={country.data.flag} height="100" alt={`flag of ${country.data.name}`}/>  
     </div>
   )
+}
+
+Country.propTypes = {
+  country: PropTypes.object
 }
 
 const App = () => {
