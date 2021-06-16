@@ -7,6 +7,10 @@
     {
       "content": "the best featrure ever <3",
       "id": 2
+    },
+    {
+      "content": "lol this guy cant type fature right ^^^XD",
+      "id": 3
     }
   ],
   "persons": [
@@ -19,6 +23,11 @@
       "name": "kaltsoon",
       "number": "045-2323456",
       "id": 2
+    },
+    {
+      "name": "Funny guy",
+      "number": "040-12345679",
+      "id": 3
     }
   ]
 }
