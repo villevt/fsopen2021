@@ -12,6 +12,11 @@ const api = path => {
     return response.data
   }
 
+  const get = async id => {
+    const response = await axios.get(`path/${id}`)
+    return response.data
+  }
+
   const create = async item => {
     const response = await axios.post(path, item, {headers: {Authorization: token}})
     return response.data
@@ -28,6 +33,7 @@ const api = path => {
   return ({
     setToken,
     getAll,
+    get,
     create,
     update,
     remove

@@ -7,6 +7,7 @@ import { getSavedUser, loginUser, logoutUser } from "./reducers/currentUser"
 
 import Main from "./views/Main"
 import Users from "./views/Users"
+import User from "./views/User"
 
 import Login from "./components/Login"
 import Notification from "./components/Notification"
@@ -47,6 +48,9 @@ const App = () => {
         Logout
       </button>
       <Switch>
+        <Route path="/users/:id">
+          <User />
+        </Route>
         <Route path="/users">
           <Users />
         </Route>
