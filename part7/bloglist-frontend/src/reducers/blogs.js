@@ -59,11 +59,11 @@ export const addBlog = blog => {
 export const likeBlog = blog => {
   return async dispatch => {
     try {
-      const copy = {...blog, likes: blog.likes++}
+      const copy = {...blog, likes: ++blog.likes}
       await blogService.update(copy)
       dispatch({
         type: "UPDATE_BLOG",
-        data: blog
+        data: copy
       })
       dispatch(setNotification({message: `Liked blog ${blog.title} by ${blog.author}`}, 3))
     } catch (error) {

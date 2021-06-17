@@ -1,6 +1,6 @@
-import React from "react"
+import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import PropTypes from "prop-types"
+import { Redirect } from "react-router"
 
 import { initBlogs, likeBlog, removeBlog } from "../reducers/blogs"
 
@@ -8,17 +8,19 @@ const Blog = ({id}) => {
   const dispatch = useDispatch()
   const currentUsername = useSelector(state => state.currentUser.username)
   const blog = useSelector(state => state.blogs.find(blog => blog.id === id))
+  const [removed, setRemoved] = useState(false)
 
-  if (!blog) {
+  if (!blog && !removed) {
     dispatch(initBlogs())
   }
 
-  const handleLike = async () => {
+  const handleLike = () => {
     dispatch(likeBlog(blog))
   }
 
   const handleRemove = async () => {
-    dispatch(removeBlog(blog))
+    await dispatch(removeBlog(blog))
+    setRemoved(true)
   }
 
   const removeButton = () => (
@@ -29,6 +31,7 @@ const Blog = ({id}) => {
 
   return(
     <div>
+      {removed && <Redirect to="/blogs" />}
       {blog ? <div className="blog">
         <div data-user={`${blog.user.name}`}>
           <h2>{blog.title} {blog.author}</h2>
@@ -46,10 +49,6 @@ const Blog = ({id}) => {
       }
     </div>
   )
-}
-
-Blog.propTypes = {
-  id: PropTypes.string.isRequired
 }
 
 export default Blog

@@ -1,9 +1,9 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { Switch, Route, useRouteMatch } from "react-router-dom"
+import { Switch, Redirect, Route, useRouteMatch } from "react-router-dom"
 
 import { initBlogs } from "./reducers/blogs"
-import { getSavedUser, loginUser, logoutUser } from "./reducers/currentUser"
+import { getSavedUser, loginUser } from "./reducers/currentUser"
 
 import Blog from "./views/Blog"
 import Main from "./views/Main"
@@ -11,11 +11,13 @@ import Users from "./views/Users"
 import User from "./views/User"
 
 import Login from "./components/Login"
+import Navigation from "./components/Navigation"
 import Notification from "./components/Notification"
 
 const App = () => {
   const dispatch = useDispatch()
   const loggedUser = useSelector(state => state.currentUser)
+  const [localUserChecked, setLocalUserChecked] = useState(false)
 
   const match = useRouteMatch("/*/:id")
 
@@ -25,14 +27,11 @@ const App = () => {
 
   useEffect(async () => {
     await dispatch(getSavedUser())
+    setLocalUserChecked(true)
   }, [])
 
   const handleLogin = async (username, password) => {
     await dispatch(loginUser(username, password))
-  }
-
-  const handleLogout = () => {
-    dispatch(logoutUser())
   }
 
   const loginForm = () => (
@@ -44,11 +43,9 @@ const App = () => {
 
   const appMain = () => (
     <div>
-      <h2>Blogs</h2>
-      {loggedUser.name} logged in
-      <button onClick={() => handleLogout()}>
-        Logout
-      </button>
+      {(localUserChecked && !loggedUser) && <Redirect to="/" />}
+      <Navigation />
+      <h2>Blog app</h2>
       <Switch>
         <Route path="/users/:id">
           <User id={match && match.params.id}/>
