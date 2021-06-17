@@ -1,51 +1,32 @@
-import React, { useState, useEffect } from "react"
+import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import Blog from "./components/Blog"
 import Login from "./components/Login"
 import NewBlog from "./components/NewBlog"
 import Notification from "./components/Notification"
 import { initBlogs } from "./reducers/blogs"
-import { setNotification } from "./reducers/notification"
-import blogService from "./services/blogs"
-import loginService from "./services/login"
+import { getSavedUser, loginUser, logoutUser } from "./reducers/users"
 
 const App = () => {
   const dispatch = useDispatch()
+
   const blogs = useSelector(state => state.blogs)
-  const [user, setUser] = useState(null)
+  const loggedUser = useSelector(state => state.users.find(user => user.logged))
 
   useEffect(async () => {
     await dispatch(initBlogs())
   }, [])
 
   useEffect(async () => {
-    const loggedUserJSON = await window.localStorage.getItem("loggedBloglistUser")
-    if (loggedUserJSON) {
-      const loggedUser = JSON.parse(loggedUserJSON)
-      setUser(loggedUser)
-      blogService.setToken(loggedUser.token)
-    }
+    await dispatch(getSavedUser())
   }, [])
 
   const handleLogin = async (username, password) => {
-    try {
-      const user = await loginService.login({username, password})
-      window.localStorage.setItem(
-        "loggedBloglistUser", JSON.stringify(user)
-      )
-      blogService.setToken(user.token)
-      setUser(user)
-      dispatch(setNotification({message: `Logged in successfully as ${user.username}`}, 3))
-    } catch (error) {
-      dispatch(setNotification({message: error.response.data.error || "Error logging in", error: true}, 3))
-    }
+    await dispatch(loginUser(username, password))
   }
 
   const handleLogout = () => {
-    setUser(null)
-    blogService.setToken("")
-    window.localStorage.removeItem("loggedBloglistUser")
-    dispatch(setNotification({message: "Logged out"}, 3))
+    dispatch(logoutUser())
   }
 
   const loginForm = () => (
@@ -58,7 +39,7 @@ const App = () => {
   const appMain = () => (
     <div>
       <h2>Blogs</h2>
-      {user.name} logged in
+      {loggedUser.name} logged in
       <button onClick={() => handleLogout()}>
         Logout
       </button>
@@ -66,7 +47,7 @@ const App = () => {
       <br/>
       <div>
         {blogs && blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} currentUsername={user.username}/>
+          <Blog key={blog.id} blog={blog} currentUsername={loggedUser.username}/>
         )}
       </div>
     </div>
@@ -75,7 +56,7 @@ const App = () => {
   return (
     <div>
       <Notification />
-      {user === null 
+      {!loggedUser 
         ? loginForm()
         : appMain()
       }
