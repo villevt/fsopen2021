@@ -2,9 +2,9 @@ import React, {useState} from "react"
 import { useDispatch } from "react-redux"
 import PropTypes from "prop-types"
 
-import { likeBlog } from "../reducers/blogs"
+import { likeBlog, removeBlog } from "../reducers/blogs"
 
-const Blog = ({blog, currentUsername, handleRemove}) => {
+const Blog = ({blog, currentUsername}) => {
   const dispatch = useDispatch()
 
   const [showDetail, setShowDetail] = useState(false)
@@ -17,6 +17,10 @@ const Blog = ({blog, currentUsername, handleRemove}) => {
 
   const handleLike = async () => {
     dispatch(likeBlog(blog))
+  }
+
+  const handleRemove = async () => {
+    dispatch(removeBlog(blog))
   }
 
   const compactView = () => (
@@ -57,8 +61,7 @@ const Blog = ({blog, currentUsername, handleRemove}) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  currentUsername: PropTypes.string.isRequired,
-  handleRemove: PropTypes.func.isRequired
+  currentUsername: PropTypes.string.isRequired
 }
 
 export default Blog

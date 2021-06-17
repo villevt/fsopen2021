@@ -14,6 +14,8 @@ const reducer = (state = null, action) => {
       copy[copy.findIndex(blog => blog.id === action.data.id)] = action.data
       copy.sort((a, b) => b.likes - a.likes)
       return copy
+    } case "REMOVE_BLOG": {
+      return state.filter(blog => blog.id !== action.data.id)
     } default: {
       return state
     }
@@ -68,4 +70,20 @@ export const likeBlog = blog => {
   }
 }
 
+export const removeBlog = blog => {
+  return async dispatch => {
+    if (window.confirm(`Are you sure you want to remove blog ${blog.title} by ${blog.author}`)) {
+      try {
+        await blogService.remove(blog)
+        dispatch({
+          type: "REMOVE_BLOG",
+          data: blog
+        })
+        dispatch(setNotification({message: `Deleted blog ${blog.title} by ${blog.author}`}, 3))
+      } catch (error) {
+        dispatch(setNotification({message: error.response.data.error || "Error deleting blog", error: true}, 3))
+      }
+    }
+  }
+}
 export default reducer

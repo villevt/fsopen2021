@@ -18,10 +18,6 @@ const App = () => {
     await dispatch(initBlogs())
   }, [])
 
-  const setBlogs = blogs => {
-    console.log(blogs)
-  }
-
   useEffect(async () => {
     const loggedUserJSON = await window.localStorage.getItem("loggedBloglistUser")
     if (loggedUserJSON) {
@@ -52,18 +48,6 @@ const App = () => {
     dispatch(setNotification({message: "Logged out"}, 3))
   }
 
-  const handleRemove = async blog => {
-    window.confirm(`Are you sure you want to remove blog ${blog.title} by ${blog.author}`)
-    try {
-      await blogService.remove(blog)
-      const copy = blogs.filter(item => item.id !== blog.id)
-      setBlogs(copy)
-      dispatch(setNotification({message: `Deleted blog ${blog.title} by ${blog.author}`}, 3))
-    } catch (error) {
-      dispatch(setNotification({message: error.response.data.error || "Error deleting blog", error: true}, 3))
-    }
-  }
-
   const loginForm = () => (
     <div>
       <h2>Log in to application</h2>
@@ -82,7 +66,7 @@ const App = () => {
       <br/>
       <div>
         {blogs && blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} currentUsername={user.username} handleRemove={handleRemove}/>
+          <Blog key={blog.id} blog={blog} currentUsername={user.username}/>
         )}
       </div>
     </div>
