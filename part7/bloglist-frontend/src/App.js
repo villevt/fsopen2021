@@ -1,17 +1,20 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import Blog from "./components/Blog"
-import Login from "./components/Login"
-import NewBlog from "./components/NewBlog"
-import Notification from "./components/Notification"
+import { Switch, Route } from "react-router-dom"
+
 import { initBlogs } from "./reducers/blogs"
-import { getSavedUser, loginUser, logoutUser } from "./reducers/users"
+import { getSavedUser, loginUser, logoutUser } from "./reducers/currentUser"
+
+import Main from "./views/Main"
+import Users from "./views/Users"
+
+import Login from "./components/Login"
+import Notification from "./components/Notification"
 
 const App = () => {
   const dispatch = useDispatch()
 
-  const blogs = useSelector(state => state.blogs)
-  const loggedUser = useSelector(state => state.users.find(user => user.logged))
+  const loggedUser = useSelector(state => state.currentUser)
 
   useEffect(async () => {
     await dispatch(initBlogs())
@@ -43,13 +46,14 @@ const App = () => {
       <button onClick={() => handleLogout()}>
         Logout
       </button>
-      <NewBlog />
-      <br/>
-      <div>
-        {blogs && blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} currentUsername={loggedUser.username}/>
-        )}
-      </div>
+      <Switch>
+        <Route path="/users">
+          <Users />
+        </Route>
+        <Route path="/">
+          <Main />
+        </Route>
+      </Switch>
     </div>
   )
 

@@ -1,5 +1,7 @@
-import blogService from "../services/blogs"
+import api from "../services/api"
 import { setNotification } from "./notification"
+
+const blogService = api("/api/blogs")
 
 const reducer = (state = null, action) => {
   switch (action.type) {
@@ -42,7 +44,7 @@ export const initBlogs = () => {
 export const addBlog = blog => {
   return async dispatch => {
     try {
-      const response = await blogService.createNew(blog)
+      const response = await blogService.create(blog)
       dispatch({
         type: "ADD_BLOG",
         data: response
