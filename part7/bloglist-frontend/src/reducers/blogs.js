@@ -72,6 +72,23 @@ export const likeBlog = blog => {
   }
 }
 
+export const commentBlog = (blog, comment) => {
+  return async dispatch => {
+    try {
+      const copy = {...blog}
+      copy.comments.push(comment)
+      await blogService.createChild(copy, {comment}, "comments")
+      dispatch({
+        type: "UPDATE_BLOG",
+        data: copy
+      })
+      dispatch(setNotification({message: `Commented blog ${blog.title} by ${blog.author}`}, 3))
+    } catch (error) {
+      dispatch(setNotification({message: error.response.data.error || "Error commenting blog", error: true}, 3))
+    }
+  }
+}
+
 export const removeBlog = blog => {
   return async dispatch => {
     if (window.confirm(`Are you sure you want to remove blog ${blog.title} by ${blog.author}`)) {

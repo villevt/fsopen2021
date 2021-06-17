@@ -12,12 +12,12 @@ blogsRouter.get("/", async (request, response) => {
 
 blogsRouter.post("/:id/comments", async (request, response) => {
   if (!request.body.comment) {
-    return response.status(401).json({error: "comment missing in request body"})
+    return response.status(400).json({error: "comment missing in request body"})
   }
 
   const blog = await Blog.findById(request.params.id)
   if (!blog) {
-    return response.status(401).json({error: "invalid blog ID"})
+    return response.status(400).json({error: "invalid blog ID"})
   }
 
   const comment = new Comment({content: request.body.comment, blog: blog})

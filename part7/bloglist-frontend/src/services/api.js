@@ -22,6 +22,11 @@ const api = path => {
     return response.data
   }
 
+  const createChild = async (item, child, name) => {
+    const response = await axios.post(`${path}/${item.id}/${name}`, child)
+    return response.data
+  }
+
   const update = async item => {
     return await axios.put(`${path}/${item.id}`, item)
   }
@@ -35,6 +40,7 @@ const api = path => {
     getAll,
     get,
     create,
+    createChild,
     update,
     remove
   })
