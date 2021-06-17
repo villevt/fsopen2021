@@ -131,7 +131,7 @@ describe("GET users", () => {
         const match = {...await helper.getBlogById(blog.id)}
         delete match.likes
         delete match.user
-        expect(match).toEqual(blog)
+        expect(match).toMatchObject(blog)
       }
     }
   })

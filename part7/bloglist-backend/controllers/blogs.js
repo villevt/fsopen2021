@@ -7,6 +7,26 @@ blogsRouter.get("/", async (request, response) => {
   response.json(blogs)
 })
 
+blogsRouter.post("/:id/comments", async (request, response) => {
+  if (!request.body.comment) {
+    return response.status(401).json({error: "comment missing in request body"})
+  }
+
+  const blog = await Blog.findById(request.params.id)
+  if (!blog) {
+    return response.status(401).json({error: "invalid blog ID"})
+  }
+
+  if (!blog.comments) {
+    blog.comments = []
+  }
+
+  blog.comments.push(request.body.comment)
+  const result = await blog.save()
+
+  response.status(204).json(result)
+})
+
 blogsRouter.post("/", async (request, response) => {
   const user = request.user
   if (!user) {

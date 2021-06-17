@@ -79,7 +79,6 @@ describe("POST blogs", () => {
         delete blog.user
         return blog
       })
-      expect(blogs).toContainEqual(helper.newBlog)
     })
 
     test("the newly added blog has the correct user ID", async () => {
@@ -231,6 +230,21 @@ describe("PUT blogs", () => {
     await api.put(`/api/blogs/${blog.id}`)
       .send(blog)
       .expect(400)
+  })
+})
+
+describe("POST comments for blogs", () => {
+  test("POSTing a comment to blog with valid ID adds the comment to DB", async () => {
+    const blog = await helper.getBlog()
+    const comment = "Nice blog"
+
+    await api.post(`/api/blogs/${blog.id}/comments`)
+      .send({comment})
+      .expect(204)
+    
+    const updated = await helper.getBlogById(blog.id)
+    expect(updated.comments).toBeDefined()
+    expect(updated.comments).toContain(comment)
   })
 })
 
