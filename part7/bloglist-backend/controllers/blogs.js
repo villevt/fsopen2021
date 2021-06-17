@@ -32,7 +32,7 @@ blogsRouter.post("/:id/comments", async (request, response) => {
 
   const result = await blog.save()
 
-  response.status(204).json(result)
+  response.status(201).json(result)
 })
 
 blogsRouter.post("/", async (request, response) => {

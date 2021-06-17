@@ -76,8 +76,9 @@ export const commentBlog = (blog, comment) => {
   return async dispatch => {
     try {
       const copy = {...blog}
-      copy.comments.push(comment)
-      await blogService.createChild(copy, {comment}, "comments")
+      const response = await blogService.createChild(copy, {comment}, "comments")
+      copy.comments = [...copy.comments]
+      copy.comments.push({content: comment, id: response.comments[response.comments.length-1]})
       dispatch({
         type: "UPDATE_BLOG",
         data: copy
