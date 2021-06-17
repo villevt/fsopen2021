@@ -1,13 +1,11 @@
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useRouteMatch } from "react-router"
 
 import { initUsers } from "../reducers/users"
 
-const User = () => {
+const User = ({id}) => {
   const dispatch = useDispatch()
 
-  const id = useRouteMatch("/users/:id").params.id
   const user = useSelector(state => state.users.find(user => user.id === id))
 
   if (!user) {

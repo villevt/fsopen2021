@@ -1,10 +1,11 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { Switch, Route } from "react-router-dom"
+import { Switch, Route, useRouteMatch } from "react-router-dom"
 
 import { initBlogs } from "./reducers/blogs"
 import { getSavedUser, loginUser, logoutUser } from "./reducers/currentUser"
 
+import Blog from "./views/Blog"
 import Main from "./views/Main"
 import Users from "./views/Users"
 import User from "./views/User"
@@ -14,8 +15,9 @@ import Notification from "./components/Notification"
 
 const App = () => {
   const dispatch = useDispatch()
-
   const loggedUser = useSelector(state => state.currentUser)
+
+  const match = useRouteMatch("/*/:id")
 
   useEffect(async () => {
     await dispatch(initBlogs())
@@ -49,10 +51,13 @@ const App = () => {
       </button>
       <Switch>
         <Route path="/users/:id">
-          <User />
+          <User id={match && match.params.id}/>
         </Route>
         <Route path="/users">
           <Users />
+        </Route>
+        <Route path="/blogs/:id">
+          <Blog id={match && match.params.id}/>
         </Route>
         <Route path="/">
           <Main />

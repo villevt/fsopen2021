@@ -3,7 +3,7 @@ import { setNotification } from "./notification"
 
 const blogService = api("/api/blogs")
 
-const reducer = (state = null, action) => {
+const reducer = (state = [], action) => {
   switch (action.type) {
     case "INIT_BLOGS": {
       const copy = [...action.data]
