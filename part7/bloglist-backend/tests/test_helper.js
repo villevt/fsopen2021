@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const Blog = require("../models/blog")
+const Comment =  require("../models/comment")
 const User = require("../models/user")
 const config = require("../utils/config")
 
@@ -71,6 +72,7 @@ const newBlog = {
 const initializeBlogs = async () => {
   await Blog.deleteMany()
   await Blog.insertMany(initialBlogs)
+  await Comment.deleteMany()
 }
 
 const getBlogs = async () => {
@@ -86,6 +88,13 @@ const getBlog = async () => {
 const getBlogById = async id => {
   const blog = await Blog.findById(id)
   return blog.toJSON()
+}
+
+const getPopulatedBlogById = async id => {
+  const blog = await Blog.findById(id)
+    .populate("comments")
+    .populate("user", {username: true, name: true, id: true})
+  return blog
 }
 
 const initialUsers = [
@@ -162,6 +171,11 @@ const getUserFromToken = async token => {
   return user
 }
 
+const getComments = async () => {
+  const comments = await Comment.find({})
+  return comments
+}
+
 module.exports = {
   initialBlogs,
   newBlog,
@@ -169,9 +183,11 @@ module.exports = {
   getBlogs,
   getBlog,
   getBlogById,
+  getPopulatedBlogById,
   getUserFromToken,
   initialUsers,
   newUser,
   initializeUsers,
-  getUserById
+  getUserById,
+  getComments
 }

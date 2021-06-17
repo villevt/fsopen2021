@@ -10,7 +10,7 @@ beforeAll(async () => {
 })
 
 beforeEach(async () => {
-  await helper.initializeBlogs()
+  await helper.initializeBlogs()  
 })
 
 describe("GET blogs", () => {
@@ -242,9 +242,25 @@ describe("POST comments for blogs", () => {
       .send({comment})
       .expect(204)
     
-    const updated = await helper.getBlogById(blog.id)
-    expect(updated.comments).toBeDefined()
-    expect(updated.comments).toContain(comment)
+    const comments = await helper.getComments()
+    expect(comments).toEqual(expect.arrayContaining([
+      expect.objectContaining({content: comment})
+    ]))
+  })
+
+  test("Blogs are populated with comments", async () => {
+    const blog = await helper.getBlog()
+    const comment = "Nice blog"
+
+    await api.post(`/api/blogs/${blog.id}/comments`)
+      .send({comment})
+      .expect(204)
+    
+    const updatedBlog = await helper.getPopulatedBlogById(blog.id)
+
+    expect(updatedBlog.comments).toEqual(expect.arrayContaining([
+      expect.objectContaining({content: comment})
+    ]))
   })
 })
 

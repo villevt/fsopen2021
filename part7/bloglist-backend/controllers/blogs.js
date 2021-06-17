@@ -1,9 +1,12 @@
 require("express-async-errors")
 const blogsRouter = require("express").Router()
 const Blog = require("../models/blog")
+const Comment = require("../models/comment")
 
 blogsRouter.get("/", async (request, response) => {
-  const blogs = await Blog.find({}).populate("user", {username: true, name: true, id: true})
+  const blogs = await Blog.find({})
+    .populate("user", {username: true, name: true, id: true})
+    .populate("comments")
   response.json(blogs)
 })
 
@@ -17,11 +20,16 @@ blogsRouter.post("/:id/comments", async (request, response) => {
     return response.status(401).json({error: "invalid blog ID"})
   }
 
+  const comment = new Comment({content: request.body.comment, blog: blog})
+
+  await comment.save()
+
   if (!blog.comments) {
     blog.comments = []
   }
 
-  blog.comments.push(request.body.comment)
+  blog.comments.push(comment)
+
   const result = await blog.save()
 
   response.status(204).json(result)
