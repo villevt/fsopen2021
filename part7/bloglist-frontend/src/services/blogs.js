@@ -17,8 +17,7 @@ const createNew = async blog => {
   return response.data
 }
 
-const like = async blog => {
-  blog = {...blog, likes: blog.likes+1}
+const update = async blog => {
   return await axios.put(`${baseUrl}/${blog.id}`, blog)
 }
 
@@ -26,4 +25,4 @@ const remove = async blog => {
   return await axios.delete(`${baseUrl}/${blog.id}`, {headers: {Authorization: token}})
 }
 
-export default {setToken, getAll, createNew, like, remove}
+export default {setToken, getAll, createNew, update, remove}

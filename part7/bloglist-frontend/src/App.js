@@ -52,24 +52,6 @@ const App = () => {
     dispatch(setNotification({message: "Logged out"}, 3))
   }
 
-  const handleLike = async blog => {
-    try {
-      await blogService.like(blog)
-      const copy = [...blogs]
-      for (let item of copy) {
-        if (item.id === blog.id) {
-          item.likes++
-          break
-        }
-      }
-      copy.sort((a, b) => b.likes - a.likes)
-      setBlogs(copy)
-      dispatch(setNotification({message: `Liked blog ${blog.title} by ${blog.author}`}, 3))
-    } catch (error) {
-      dispatch(setNotification({message: error.response.data.error || "Error liking blog", error: true}, 3))
-    }
-  }
-
   const handleRemove = async blog => {
     window.confirm(`Are you sure you want to remove blog ${blog.title} by ${blog.author}`)
     try {
@@ -100,7 +82,7 @@ const App = () => {
       <br/>
       <div>
         {blogs && blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} currentUsername={user.username} handleLike={handleLike} handleRemove={handleRemove}/>
+          <Blog key={blog.id} blog={blog} currentUsername={user.username} handleRemove={handleRemove}/>
         )}
       </div>
     </div>

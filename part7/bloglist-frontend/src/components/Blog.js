@@ -1,13 +1,22 @@
 import React, {useState} from "react"
+import { useDispatch } from "react-redux"
 import PropTypes from "prop-types"
 
-const Blog = ({blog, currentUsername, handleLike, handleRemove}) => {
+import { likeBlog } from "../reducers/blogs"
+
+const Blog = ({blog, currentUsername, handleRemove}) => {
+  const dispatch = useDispatch()
+
   const [showDetail, setShowDetail] = useState(false)
 
   const blogStyle = {
     border: "2px solid black",
     padding: "2px",
     margin: "2px  "
+  }
+
+  const handleLike = async () => {
+    dispatch(likeBlog(blog))
   }
 
   const compactView = () => (
@@ -25,7 +34,7 @@ const Blog = ({blog, currentUsername, handleLike, handleRemove}) => {
       {blog.url}
       <br/>
       <span className="likes">Likes {blog.likes}</span>
-      <button onClick={() => handleLike(blog)}>Like</button>
+      <button onClick={handleLike}>Like</button>
       <br/>
       {blog.user.name}
     </div>
@@ -49,7 +58,6 @@ const Blog = ({blog, currentUsername, handleLike, handleRemove}) => {
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   currentUsername: PropTypes.string.isRequired,
-  handleLike: PropTypes.func.isRequired,
   handleRemove: PropTypes.func.isRequired
 }
 

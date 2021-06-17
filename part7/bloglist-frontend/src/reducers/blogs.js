@@ -4,11 +4,16 @@ import { setNotification } from "./notification"
 const reducer = (state = null, action) => {
   switch (action.type) {
     case "INIT_BLOGS": {
-      const copy =[...action.data]
+      const copy = [...action.data]
       copy.sort((a, b) => b.likes - a.likes)
-      return action.data
+      return copy
     } case "ADD_BLOG": {
       return state.concat(action.data)
+    } case "UPDATE_BLOG": {
+      const copy = [...state]
+      copy[copy.findIndex(blog => blog.id === action.data.id)] = action.data
+      copy.sort((a, b) => b.likes - a.likes)
+      return copy
     } default: {
       return state
     }
@@ -43,6 +48,22 @@ export const addBlog = blog => {
       dispatch(setNotification({message: `Created new blog ${response.title} by ${response.author}`}, 3))
     } catch (error) {
       dispatch(setNotification({message: error.response.data.error || "Error creating blog", error: true}, 3))
+    }
+  }
+}
+
+export const likeBlog = blog => {
+  return async dispatch => {
+    try {
+      const copy = {...blog, likes: blog.likes++}
+      await blogService.update(copy)
+      dispatch({
+        type: "UPDATE_BLOG",
+        data: blog
+      })
+      dispatch(setNotification({message: `Liked blog ${blog.title} by ${blog.author}`}, 3))
+    } catch (error) {
+      dispatch(setNotification({message: error.response.data.error || "Error liking blog", error: true}, 3))
     }
   }
 }
