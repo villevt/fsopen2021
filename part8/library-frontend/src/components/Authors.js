@@ -1,4 +1,5 @@
-import React from 'react'
+import React from "react"
+import PropTypes from "prop-types"
 
 const Authors = (props) => {
   if (!props.show) {
@@ -32,6 +33,10 @@ const Authors = (props) => {
 
     </div>
   )
+}
+
+Authors.propTypes = {
+  show: PropTypes.bool
 }
 
 export default Authors

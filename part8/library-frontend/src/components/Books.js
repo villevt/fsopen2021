@@ -1,5 +1,6 @@
 
-import React from 'react'
+import React from "react"
+import PropTypes from "prop-types"
 
 const Books = (props) => {
   if (!props.show) {
@@ -34,6 +35,10 @@ const Books = (props) => {
       </table>
     </div>
   )
+}
+
+Books.propTypes = {
+  show: PropTypes.bool
 }
 
 export default Books
