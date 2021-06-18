@@ -12,6 +12,7 @@ import Main from "./views/Main"
 import Users from "./views/Users"
 import User from "./views/User"
 
+import Logo from "./components/Logo"
 import Navigation from "./components/Navigation"
 import Notification from "./components/Notification"
 
@@ -43,6 +44,7 @@ const App = () => {
 
   return (
     <Body>
+      <Logo />
       <Notification />
       {!loggedUser 
         ? <Login />
