@@ -1,8 +1,18 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from "react-router-dom"
+import styled from "styled-components"
 
 import { initUsers } from "../reducers/users"
+
+const TdLink = styled.td`
+  > a {
+    color: Sienna;
+  }
+  > a:hover {
+    color: Chocolate
+  }
+`
 
 const Users = () => {
   const dispatch = useDispatch()
@@ -27,7 +37,7 @@ const Users = () => {
           {users.map(user => {
             return (
               <tr key={user.id}>
-                <td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
+                <TdLink><Link to={`/users/${user.id}`}>{user.name}</Link></TdLink>
                 <td>{user.blogs.length}</td>
               </tr>
             )
