@@ -14,7 +14,7 @@ const Text = styled.h1`
 
 const Logo = () => (
   <Text>
-    BLOGApp
+    BLOG|app
   </Text>
 )
 

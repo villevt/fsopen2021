@@ -34,6 +34,7 @@ const App = () => {
 
   const Body = styled.div`
     background-color: Azure;
+    color: Sienna;
     display: flex;
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;

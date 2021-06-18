@@ -1,7 +1,34 @@
 import React, { useState } from "react"
 import { useDispatch } from "react-redux"
+import styled from "styled-components"
 
 import { loginUser } from "../reducers/currentUser"
+
+const Container = styled.div`
+  align-self: center;
+`
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+`
+
+const InputField = styled.div`
+  margin-bottom: 1em;
+  margin-top: 1em;
+`
+
+const Input = styled.input`
+  width: 100%;
+`
+
+const Button = styled.button`
+  align-self: center;
+  background: none;
+  border-color: Sienna;
+  color: Sienna;
+  border-radius: 100px;
+  font-size: 1em;
+`
 
 const Login = () => {
   const dispatch = useDispatch()
@@ -17,31 +44,31 @@ const Login = () => {
   }
 
   return (
-    <div>
-      <h2>Log in to application</h2>
-      <form onSubmit={handleLogin}>
-        <div>
+    <Container>
+      <h2>Login to application</h2>
+      <Form onSubmit={handleLogin}>
+        <InputField>
           Username
-          <input 
+          <Input
             type="text" 
             value={username}
             name="Username"
             autoComplete="current-password"
             onChange={(event) => setUsername(event.target.value)}
           />
-        </div>
-        <div>
+        </InputField>
+        <InputField>
           Password
-          <input 
+          <Input 
             type="password" 
             value={password}
             name="Password"
             onChange={(event) => setPassword(event.target.value)}
           />
-        </div>
-        <button type="submit">Login</button>  
-      </form>
-    </div>
+        </InputField>
+        <Button type="submit">Login</Button>  
+      </Form>
+    </Container>
   )
 }
 
