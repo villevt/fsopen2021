@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from "react-redux"
 import { Switch, Redirect, Route, useRouteMatch } from "react-router-dom"
 
 import { initBlogs } from "./reducers/blogs"
-import { getSavedUser, loginUser } from "./reducers/currentUser"
+import { getSavedUser} from "./reducers/currentUser"
 
 import Blog from "./views/Blog"
+import Login from "./views/Login"
 import Main from "./views/Main"
 import Users from "./views/Users"
 import User from "./views/User"
 
-import Login from "./components/Login"
 import Navigation from "./components/Navigation"
 import Notification from "./components/Notification"
 
@@ -29,17 +29,6 @@ const App = () => {
     await dispatch(getSavedUser())
     setLocalUserChecked(true)
   }, [])
-
-  const handleLogin = async (username, password) => {
-    await dispatch(loginUser(username, password))
-  }
-
-  const loginForm = () => (
-    <div>
-      <h2>Log in to application</h2>
-      <Login handleLogin={handleLogin}/>
-    </div>
-  )
 
   const appMain = () => (
     <div>
@@ -67,7 +56,7 @@ const App = () => {
     <div>
       <Notification />
       {!loggedUser 
-        ? loginForm()
+        ? <Login />
         : appMain()
       }
     </div>
