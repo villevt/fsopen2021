@@ -1,8 +1,31 @@
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Redirect } from "react-router"
+import styled from "styled-components"
 
 import { commentBlog, initBlogs, likeBlog, removeBlog } from "../reducers/blogs"
+
+const Input = styled.input`
+  background-color: Sienna;
+  border: none;
+  color: Snow;
+  font-size: 1em;
+  :focus {
+    outline: Snow;
+  }
+`
+
+const Button = styled.button`
+  background-color: Sienna;
+  border: none;
+  border-radius: 5px;
+  color: Snow;
+  margin-left: 0.5em;
+  padding: 0.25em;
+  :hover {
+    background-color: Chocolate;s
+  }
+`
 
 const Blog = ({id}) => {
   const dispatch = useDispatch()
@@ -47,15 +70,15 @@ const Blog = ({id}) => {
           <a href={blog.url}>{blog.url}</a>
           <br/>
           <span className="likes">{blog.likes} likes</span>
-          <button onClick={handleLike}>Like</button>
+          <Button onClick={handleLike}>Like</Button>
           <br/>
           Added by {blog.user.name}
         </div>
         {(currentUsername === blog.user.username) && removeButton()}
         <h3>Comments</h3>
         <form onSubmit={handleComment}>
-          <input onChange={event => setNewComment(event.target.value)} value={newComment}></input>
-          <button>Add comment</button>
+          <Input onChange={event => setNewComment(event.target.value)} value={newComment}></Input>
+          <Button>Add comment</Button>
         </form>
         <ul>
           {blog.comments.map(comment => {
