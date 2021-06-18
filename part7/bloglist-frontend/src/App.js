@@ -34,6 +34,7 @@ const App = () => {
   const Body = styled.div`
     background-color: Azure;
     display: flex;
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
     min-height: 100vh;
     min-width: 100vw;
