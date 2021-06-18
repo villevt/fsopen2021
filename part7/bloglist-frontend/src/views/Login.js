@@ -18,16 +18,29 @@ const InputField = styled.div`
 `
 
 const Input = styled.input`
+  background: Sienna;
+  border: none;
+  color: Snow;
+  font-size: 0.9em;
+  margin-top: 0.25em;
+  padding: 0.25em;  
   width: 100%;
+  :focus {
+    outline: solid Snow;
+  }
 `
 
 const Button = styled.button`
   align-self: center;
-  background: none;
-  border-color: Sienna;
-  color: Sienna;
-  border-radius: 100px;
+  border: none;
+  background: Sienna;
+  color: Snow;
+  border-radius: 5px;
   font-size: 1em;
+  padding: 0.25em;
+  :hover {
+    background: Chocolate;
+  }
 `
 
 const Login = () => {
