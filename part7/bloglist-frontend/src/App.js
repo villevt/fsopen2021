@@ -16,6 +16,27 @@ import Logo from "./components/Logo"
 import Navigation from "./components/Navigation"
 import Notification from "./components/Notification"
 
+const Body = styled.div`
+    background-color: Azure;
+    color: Sienna;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    min-width: 100vw;
+    padding: 0;
+  `
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+const Content = styled.div`
+  align-self: center;
+  width: 80%;
+`
+
 const App = () => {
   const dispatch = useDispatch()
   const loggedUser = useSelector(state => state.currentUser)
@@ -32,43 +53,32 @@ const App = () => {
     setLocalUserChecked(true)
   }, [])
 
-  const Body = styled.div`
-    background-color: Azure;
-    color: Sienna;
-    display: flex;
-    flex-direction: column;
-    font-family: 'Montserrat', sans-serif;
-    margin: 0;
-    min-height: 100vh;
-    min-width: 100vw;
-    padding: 0;
-  `
-
   return (
     <Body>
       <Logo />
       <Notification />
       {!loggedUser 
         ? <Login />
-        : <div>
+        : <Container>
           {(localUserChecked && !loggedUser) && <Redirect to="/" />}
           <Navigation />
-          <h2>Blog app</h2>
-          <Switch>
-            <Route path="/users/:id">
-              <User id={match && match.params.id}/>
-            </Route>
-            <Route path="/users">
-              <Users />
-            </Route>
-            <Route path="/blogs/:id">
-              <Blog id={match && match.params.id}/>
-            </Route>
-            <Route path="/">
-              <Main />
-            </Route>
-          </Switch>
-        </div>
+          <Content>
+            <Switch>
+              <Route path="/users/:id">
+                <User id={match && match.params.id}/>
+              </Route>
+              <Route path="/users">
+                <Users />
+              </Route>
+              <Route path="/blogs/:id">
+                <Blog id={match && match.params.id}/>
+              </Route>
+              <Route path="/">
+                <Main />
+              </Route>
+            </Switch>
+          </Content>
+        </Container>
       }
     </Body>
   )
