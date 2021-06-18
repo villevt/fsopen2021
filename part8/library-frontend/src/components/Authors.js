@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { useMutation, useQuery } from "@apollo/client"
 
@@ -12,6 +12,14 @@ const Authors = (props) => {
     refetchQueries: [{query: ALL_AUTHORS}]
   })
 
+  const authors = useQuery(ALL_AUTHORS)
+
+  useEffect(() => {
+    if (!authors.loading) {
+      setName(authors.data.allAuthors[0].name)
+    }
+  }, [authors])
+
   const updateAuthor = () => {
     editAuthor({variables: {name, born: parseInt(born)}})
     setName("")
@@ -21,7 +29,6 @@ const Authors = (props) => {
   if (!props.show) {
     return null
   }
-  const authors = useQuery(ALL_AUTHORS)
 
   if (authors.loading) {
     return(
@@ -55,7 +62,9 @@ const Authors = (props) => {
       <h3>Set birthyear</h3>
       <div>
         Name
-        <input value={name} onChange={event => setName(event.target.value)}/>
+        <select onChange={event => setName(event.target.value)} value={name}>
+          {authors.data.allAuthors.map(a => <option key={a.name} value={a.name}>{a.name}</option>)}
+        </select>
       </div>
       <div>
         Born
