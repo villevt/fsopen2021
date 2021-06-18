@@ -1,28 +1,35 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { useSelector } from "react-redux"
+import styled from "styled-components"
+
+const Container = styled.div`
+  color: Snow;
+  position: absolute;
+  right: 1em;
+  top: 1.75em;
+  width: 30%;
+  padding: 1em;
+`
 
 const Notification = () => {
   const style = {
-    color: "white",
-    marginBottom: "10px",
-    padding: "2px",
-    width: "50%"
+    backgroundColor: "SpringGreen"
   }
 
   const notification = useSelector(state => state.notification)
 
   if (notification && notification.error) {
-    style.backgroundColor = "red"
+    style.backgroundColor = "Tomato"
   } else {
-    style.backgroundColor = "green"
+    style.backgroundColor = "SpringGreen"
   }
 
   if (notification) {
     return (
-      <div style={style} className="notification">
+      <Container style={style} className="notification">
         {notification.message}
-      </div>
+      </Container>
     )
   } else {
     return null
