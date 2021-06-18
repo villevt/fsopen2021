@@ -1,8 +1,24 @@
 import React from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
+import styled from "styled-components"
 
 import NewBlog from "../components/NewBlog"
+
+const Row = styled.div`
+  border-color: Sienna;
+  border-style: solid;
+  border-width: 0 0 2px 0;
+  margin-bottom: 0.5em;
+  margin-top: 0.5em;
+  > a {
+    color: Sienna;
+    text-decoration: None;
+  }
+  > a:hover {
+    color: Chocolate;
+  }
+`
 
 const Main = () => {
   const blogs = useSelector(state => state.blogs)
@@ -12,21 +28,17 @@ const Main = () => {
     flexDirection: "column"
   }
 
-  const linkStyle = {
-    border: "2px solid black",
-    padding: "2px",
-    margin: "2px"
-  }
-
   return (
     <div>
       <NewBlog />
       <br/>
       <div style={linkContainerStyle}>
         {blogs && blogs.map(blog =>
-          <Link style={linkStyle} key={blog.id} to={`/blogs/${blog.id}`}>
-            {blog.title}
-          </Link>
+          <Row key={blog.id}>
+            <Link to={`/blogs/${blog.id}`}>
+              {blog.title}
+            </Link>
+          </Row>
         )}
       </div>
     </div>
