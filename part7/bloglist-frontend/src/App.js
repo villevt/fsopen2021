@@ -35,6 +35,7 @@ const Container = styled.div`
 const Content = styled.div`
   align-self: center;
   width: 80%;
+  margin-top: 1em;
 `
 
 const App = () => {
