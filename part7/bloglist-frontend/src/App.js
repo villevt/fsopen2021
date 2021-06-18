@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Switch, Redirect, Route, useRouteMatch } from "react-router-dom"
+import styled from "styled-components"
 
 import { initBlogs } from "./reducers/blogs"
 import { getSavedUser} from "./reducers/currentUser"
@@ -30,36 +31,41 @@ const App = () => {
     setLocalUserChecked(true)
   }, [])
 
-  const appMain = () => (
-    <div>
-      {(localUserChecked && !loggedUser) && <Redirect to="/" />}
-      <Navigation />
-      <h2>Blog app</h2>
-      <Switch>
-        <Route path="/users/:id">
-          <User id={match && match.params.id}/>
-        </Route>
-        <Route path="/users">
-          <Users />
-        </Route>
-        <Route path="/blogs/:id">
-          <Blog id={match && match.params.id}/>
-        </Route>
-        <Route path="/">
-          <Main />
-        </Route>
-      </Switch>
-    </div>
-  )
+  const Body = styled.div`
+    background-color: Azure;
+    display: flex;
+    margin: 0;
+    min-height: 100vh;
+    min-width: 100vw;
+    padding: 0;
+  `
 
   return (
-    <div>
+    <Body>
       <Notification />
       {!loggedUser 
         ? <Login />
-        : appMain()
+        : <div>
+          {(localUserChecked && !loggedUser) && <Redirect to="/" />}
+          <Navigation />
+          <h2>Blog app</h2>
+          <Switch>
+            <Route path="/users/:id">
+              <User id={match && match.params.id}/>
+            </Route>
+            <Route path="/users">
+              <Users />
+            </Route>
+            <Route path="/blogs/:id">
+              <Blog id={match && match.params.id}/>
+            </Route>
+            <Route path="/">
+              <Main />
+            </Route>
+          </Switch>
+        </div>
       }
-    </div>
+    </Body>
   )
 }
 
