@@ -1,5 +1,10 @@
+require("dotenv").config()
 const { ApolloServer, gql } = require("apollo-server")
+const mongoose = require("mongoose")
 const {v4: uuid} = require("uuid")
+
+const Author = require("./models/Author")
+const Book = require("./models/Book")
 
 let authors = [
   {
@@ -96,6 +101,12 @@ const typeDefs = gql`
   }
 
   type Mutation {
+    addAuthor(
+      name: String!
+      born: Int
+      bookCount: Int!
+      id: ID!
+    ): Author
     addBook(
       title: String!
       author: String!
@@ -128,6 +139,10 @@ const resolvers = {
   },
 
   Mutation: {
+    addAuthor: async (root, args) => {
+      const author = new Author({...args})
+      await author.save()
+    },
     addBook: (root, args) => {
       const book = {...args, id: uuid()}
       books = books.concat(book)
@@ -155,6 +170,28 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
 })
+
+const initializeAuthors = async () => {
+  if (await !Author.findById(authors[0])) {
+    for (const author of authors) {
+      const newAuthor = new Author(author)
+      await newAuthor.save()
+    }
+  }
+}
+initializeAuthors()
+
+const initializeBooks = async () => {
+  if (await !Book.findById(authors[0])) {
+    for (const book of books) {
+      const newBook = new Book(book)
+      await newBook.save()
+    }
+  }
+}
+initializeBooks()
+
+mongoose.connect(process.env.MONGODB_URI, {useFindAndModify: true, useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true})
 
 server.listen().then(({ url }) => {
   console.log(`Server ready at ${url}`)
