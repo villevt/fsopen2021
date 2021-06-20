@@ -1,7 +1,6 @@
 require("dotenv").config()
 const { ApolloServer, gql } = require("apollo-server")
 const mongoose = require("mongoose")
-const {v4: uuid} = require("uuid")
 
 const Author = require("./models/Author")
 const Book = require("./models/Book")
@@ -104,8 +103,6 @@ const typeDefs = gql`
     addAuthor(
       name: String!
       born: Int
-      bookCount: Int!
-      id: ID!
     ): Author
     addBook(
       title: String!
@@ -140,15 +137,18 @@ const resolvers = {
 
   Mutation: {
     addAuthor: async (root, args) => {
-      const author = new Author({...args})
+      const author = new Author(args)
       await author.save()
+      return author
     },
-    addBook: (root, args) => {
-      const book = {...args, id: uuid()}
-      books = books.concat(book)
-      if (!authors.find(author => author.name === book.author)) {
-        authors = authors.concat({name: args.author, id: uuid()})
+    addBook: async (root, args) => {
+      let author = await Author.findOne({name: args.author})
+      if (!author) {
+        author = new Author({name: args.author})
+        await author.save()
       }
+      const book = new Book(args)
+      await book.save()
       return book
     },
     editAuthor: (root, args) => {
