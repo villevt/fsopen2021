@@ -172,26 +172,31 @@ const server = new ApolloServer({
 })
 
 const initializeAuthors = async () => {
-  if (await !Author.findById(authors[0])) {
+  if ((await Author.find({})).length === 0) {
     for (const author of authors) {
-      const newAuthor = new Author(author)
+      const newAuthor = new Author({...author, id: undefined})
       await newAuthor.save()
     }
   }
 }
-initializeAuthors()
 
 const initializeBooks = async () => {
-  if (await !Book.findById(authors[0])) {
+  if ((await Book.find({})).length === 0) {
     for (const book of books) {
-      const newBook = new Book(book)
+      const author = await Author.findOne({name: book.author})
+      const newBook = new Book({...book, author: author, id: undefined})
       await newBook.save()
     }
   }
 }
-initializeBooks()
 
 mongoose.connect(process.env.MONGODB_URI, {useFindAndModify: true, useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true})
+const init = async () => {
+  await initializeAuthors()
+  await initializeBooks()
+}
+
+init()
 
 server.listen().then(({ url }) => {
   console.log(`Server ready at ${url}`)
