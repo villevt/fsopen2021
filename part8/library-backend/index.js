@@ -1,7 +1,8 @@
 require("dotenv").config()
-const { ApolloServer, gql, UserInputError, AuthenticationError } = require("apollo-server")
+const { ApolloServer, gql, UserInputError, AuthenticationError, PubSub } = require("apollo-server")
 const jwt = require("jsonwebtoken")
 const mongoose = require("mongoose")
+const pubsub = new PubSub()
 
 const Author = require("./models/Author")
 const Book = require("./models/Book")
@@ -143,6 +144,10 @@ const typeDefs = gql`
     allAuthors: [Author!]!
     me: User
   }
+
+  type Subscription {
+    bookAdded: Book!
+  }
 `
 
 const resolvers = {
@@ -202,6 +207,8 @@ const resolvers = {
         }
       }
       
+      pubsub.publish("BOOK_ADDED", {bookAdded: book})
+
       return book
     },
     editAuthor: async (root, args, context) => {
@@ -239,6 +246,12 @@ const resolvers = {
       }
 
       return {value: jwt.sign(user.toJSON(), process.env.SECRET)}
+    }
+  },
+
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"])
     }
   },
 
