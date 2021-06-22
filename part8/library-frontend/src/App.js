@@ -5,6 +5,7 @@ import Authors from "./components/Authors"
 import Books from "./components/Books"
 import Login from "./components/Login"
 import NewBook from "./components/NewBook"
+import Recommend from "./components/Recommend"
 
 const App = ({onLogout}) => {
   const [page, setPage] = useState("authors")
@@ -15,11 +16,12 @@ const App = ({onLogout}) => {
   }, [])
 
   const handleLogin = () => {
-    setLoggedIn(true)
     setPage("authors")
+    setLoggedIn(true)
   }
 
   const handleLogout = () => {
+    setPage("authors")
     setLoggedIn(false)
     onLogout()
   }
@@ -31,6 +33,7 @@ const App = ({onLogout}) => {
         <button onClick={() => setPage("books")}>books</button>
         {!loggedIn && <button onClick={() => setPage("login")}>login</button>}
         {loggedIn && <button onClick={() => setPage("add")}>add book</button>}
+        {loggedIn && <button onClick={() => setPage("recommend")}>recommend</button>}
         {loggedIn && <button onClick={handleLogout}>logout</button>}
       </div>
 
@@ -44,6 +47,10 @@ const App = ({onLogout}) => {
 
       <NewBook
         show={page === "add"}
+      />
+
+      <Recommend 
+        show={page === "recommend"}
       />
 
       <Login 
