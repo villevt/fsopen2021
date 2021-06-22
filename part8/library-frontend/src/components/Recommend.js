@@ -2,7 +2,7 @@ import React, {useEffect} from "react"
 import PropTypes from "prop-types"
 import { useQuery, useLazyQuery } from "@apollo/client"
 
-import { FAVORITE_BOOKS, FAVORITE_GENRE } from "../queries"
+import { GENRE_BOOKS, FAVORITE_GENRE } from "../queries"
 
 const Recommend = (props) => {
   if (!props.show) {
@@ -10,7 +10,7 @@ const Recommend = (props) => {
   }
 
   const favoriteGenre = useQuery(FAVORITE_GENRE)
-  const [queryBooks, books] = useLazyQuery(FAVORITE_BOOKS)
+  const [queryBooks, books] = useLazyQuery(GENRE_BOOKS)
 
   console.log(books)
 

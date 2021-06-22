@@ -65,12 +65,13 @@ export const FAVORITE_GENRE = gql`
   }
 `
 
-export const FAVORITE_BOOKS = gql`
+export const GENRE_BOOKS = gql`
   query allBooks($genre:String!) {
     allBooks(genre: $genre){
       author{name},
       title,
-      published
+      published,
+      genres
     }
   }
 `
