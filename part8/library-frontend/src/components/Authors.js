@@ -59,23 +59,28 @@ const Authors = (props) => {
           )}
         </tbody>
       </table>
-      <h3>Set birthyear</h3>
-      <div>
-        Name
-        <select onChange={event => setName(event.target.value)} value={name}>
-          {authors.data.allAuthors.map(a => <option key={a.name} value={a.name}>{a.name}</option>)}
-        </select>
-      </div>
-      <div>
-        Born
-        <input value={born} onChange={event => setBorn(event.target.value)}/>
-      </div>
-      <button onClick={updateAuthor}>Update author</button>
+      {props.loggedIn &&
+        <div>
+          <h3>Set birthyear</h3>
+          <div>
+            Name
+            <select onChange={event => setName(event.target.value)} value={name}>
+              {authors.data.allAuthors.map(a => <option key={a.name} value={a.name}>{a.name}</option>)}
+            </select>
+          </div>
+          <div>
+            Born
+            <input value={born} onChange={event => setBorn(event.target.value)}/>
+          </div>
+          <button onClick={updateAuthor}>Update author</button>
+        </div>
+      }
     </div>
   )
 }
 
 Authors.propTypes = {
+  loggedIn: PropTypes.bool,
   show: PropTypes.bool
 }
 
