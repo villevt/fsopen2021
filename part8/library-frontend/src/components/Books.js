@@ -1,8 +1,5 @@
 import React, {useState} from "react"
 import PropTypes from "prop-types"
-import { useQuery } from "@apollo/client"
-
-import { GENRE_BOOKS } from "../queries"
 
 const Books = (props) => {
   if (!props.show) {
@@ -10,9 +7,8 @@ const Books = (props) => {
   }
 
   const [genreFilter, setGenreFilter] = useState("")
-  const books = useQuery(GENRE_BOOKS, {variables: {genre: genreFilter}})
 
-  if (books.loading) {
+  if (props.books.loading) {
     return (
       <div>
         Loading books
@@ -21,15 +17,16 @@ const Books = (props) => {
   }
 
   const genres = new Set()
-  for (const book of books.data.allBooks) {
+  for (const book of props.books.data.allBooks) {
     for (const genre of book.genres) {
       genres.add(genre)
     }
   }
 
   const handleFilter = event => {
-    books.refetch()
+    props.books.refetch()
     setGenreFilter(event.target.value)
+    props.onGenreFilterChanged(genreFilter)
   }
 
   return (
@@ -47,7 +44,7 @@ const Books = (props) => {
               published
             </th>
           </tr>
-          {books.data.allBooks.map(a => {
+          {props.books.data.allBooks.map(a => {
             return (
               <tr key={a.title}>
                 <td>{a.title}</td>
@@ -64,7 +61,9 @@ const Books = (props) => {
 }
 
 Books.propTypes = {
-  show: PropTypes.bool
+  books: PropTypes.object,
+  show: PropTypes.bool,
+  onGenreFilterChanged: PropTypes.func
 }
 
 export default Books

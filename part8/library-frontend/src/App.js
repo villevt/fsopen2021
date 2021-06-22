@@ -6,19 +6,20 @@ import Books from "./components/Books"
 import Login from "./components/Login"
 import NewBook from "./components/NewBook"
 import Recommend from "./components/Recommend"
-import { useSubscription } from "@apollo/client"
-import { BOOK_ADDED } from "./queries"
+import { useSubscription, useQuery } from "@apollo/client"
+import { BOOK_ADDED, GENRE_BOOKS } from "./queries"
 
-const App = ({onLogout}) => {
+const App = ({onLogout, onBookAdded, onGenreFilterChanged}) => {
   const [page, setPage] = useState("authors")
   const [loggedIn, setLoggedIn] = useState(false)
+  const [genreFilter, setGenreFilter] = useState("")
+  const books = useQuery(GENRE_BOOKS, {variables: {genre: genreFilter}})
 
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({subscriptionData}) => {
-      console.log(subscriptionData)
       window.alert(`Book ${subscriptionData.data.bookAdded.title} has been added.`)
+      onBookAdded(subscriptionData.data.bookAdded)
     },
-    error: error => console.error(error)
   })
 
   useEffect(() => {
@@ -36,11 +37,24 @@ const App = ({onLogout}) => {
     onLogout()
   }
 
+  const handleAdd = () => {
+    setPage("books")
+  }
+
+  const handleGenreFilterChange = genreFilter => {
+    setGenreFilter(genreFilter)
+    onGenreFilterChanged(genreFilter)
+    books.refetch()
+  }
+
   return (
     <div>
       <div>
         <button onClick={() => setPage("authors")}>authors</button>
-        <button onClick={() => setPage("books")}>books</button>
+        <button onClick={() => {
+          setPage("books")
+          setGenreFilter("")
+        }}>books</button>
         {!loggedIn && <button onClick={() => setPage("login")}>login</button>}
         {loggedIn && <button onClick={() => setPage("add")}>add book</button>}
         {loggedIn && <button onClick={() => setPage("recommend")}>recommend</button>}
@@ -52,15 +66,15 @@ const App = ({onLogout}) => {
       />
 
       <Books
-        show={page === "books"}
+        show={page === "books"} books={books} onGenreFilterChanged={handleGenreFilterChange}
       />
 
       <NewBook
-        show={page === "add"}
+        show={page === "add"} onAdd={handleAdd} 
       />
 
       <Recommend 
-        show={page === "recommend"}
+        show={page === "recommend"} books={books} onGenreFilterChanged={handleGenreFilterChange}
       />
 
       <Login 
@@ -72,7 +86,9 @@ const App = ({onLogout}) => {
 }
 
 App.propTypes = {
-  onLogout: PropTypes.func
+  onLogout: PropTypes.func,
+  onBookAdded: PropTypes.func,
+  onGenreFilterChanged: PropTypes.func
 }
 
 export default App

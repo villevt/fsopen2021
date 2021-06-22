@@ -1,8 +1,8 @@
 import React, {useEffect} from "react"
 import PropTypes from "prop-types"
-import { useQuery, useLazyQuery } from "@apollo/client"
+import { useQuery} from "@apollo/client"
 
-import { GENRE_BOOKS, FAVORITE_GENRE } from "../queries"
+import { FAVORITE_GENRE } from "../queries"
 
 const Recommend = (props) => {
   if (!props.show) {
@@ -10,18 +10,14 @@ const Recommend = (props) => {
   }
 
   const favoriteGenre = useQuery(FAVORITE_GENRE)
-  const [queryBooks, books] = useLazyQuery(GENRE_BOOKS)
-
-  console.log(books)
 
   useEffect(() => {
     if (!favoriteGenre.loading) {
-      console.log(favoriteGenre.data.me.favoriteGenre)
-      queryBooks({variables: {genre: favoriteGenre.data.me.favoriteGenre}})
+      props.onGenreFilterChanged(favoriteGenre.data.me.favoriteGenre)
     }
   }, [favoriteGenre.data])
 
-  if (!books.called || books.loading) {
+  if (favoriteGenre.loading || props.books.loading) {
     return (
       <div>
         Loading recommendations
@@ -44,7 +40,7 @@ const Recommend = (props) => {
               published
             </th>
           </tr>
-          {books.data.allBooks.map(a => {
+          {props.books.data.allBooks.map(a => {
             return (
               <tr key={a.title}>
                 <td>{a.title}</td>
@@ -60,7 +56,9 @@ const Recommend = (props) => {
 }
 
 Recommend.propTypes = {
-  show: PropTypes.bool
+  books: PropTypes.object,
+  show: PropTypes.bool,
+  onGenreFilterChanged: PropTypes.func
 }
 
 export default Recommend

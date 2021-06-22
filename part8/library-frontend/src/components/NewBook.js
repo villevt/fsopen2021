@@ -29,6 +29,7 @@ const NewBook = (props) => {
     setAuthor("")
     setGenres([])
     setGenre("")
+    props.onAdd()
   }
 
   const addGenre = () => {
@@ -78,7 +79,8 @@ const NewBook = (props) => {
 }
 
 NewBook.propTypes = {
-  show: PropTypes.bool
+  show: PropTypes.bool,
+  onAdd: PropTypes.func
 }
 
 export default NewBook
