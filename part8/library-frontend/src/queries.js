@@ -57,8 +57,20 @@ export const LOGIN = gql`
   }
 `
 
-export const CURRENT_USER = gql`
+export const FAVORITE_GENRE = gql`
   query{
-    me{favoriteGenre}
+    me{
+      favoriteGenre
+    }
+  }
+`
+
+export const FAVORITE_BOOKS = gql`
+  query allBooks($genre:String!) {
+    allBooks(genre: $genre){
+      author{name},
+      title,
+      published
+    }
   }
 `
