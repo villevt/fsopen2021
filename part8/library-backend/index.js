@@ -185,19 +185,22 @@ const resolvers = {
       }
 
       let author = await Author.findOne({name: args.author})
+      const book = new Book({...args, author: author})
 
       if (!author) {
         author = new Author({name: args.author})
+        book.author = author
+      }
 
-        try {
-          await author.save()
-        } catch (error) {
-          if (error.name === "ValidationError") {
-            throw new UserInputError(error.message, {invalidArgs: args})
-          }
+      author.books = author.books.concat(book)
+
+      try {
+        await author.save()
+      } catch (error) {
+        if (error.name === "ValidationError") {
+          throw new UserInputError(error.message, {invalidArgs: args})
         }
       }
-      const book = new Book({...args, author: author})
 
       try {
         await book.save()
@@ -257,8 +260,8 @@ const resolvers = {
 
   Author: {
     bookCount: async root => {
-      const author = await Author.findOne({name: root.name})
-      return (await Book.find({author})).length
+      const author = await Author.findOne({name: root.name}).populate("books")
+      return author.books.length
     }
   }
 }
@@ -279,8 +282,7 @@ const server = new ApolloServer({
 const initializeAuthors = async () => {
   if ((await Author.find({})).length === 0) {
     for (const author of authors) {
-      const newAuthor = new Author({...author, id: undefined})
-      await newAuthor.save()
+      await resolvers.Mutation.addAuthor(null, author)
     }
   }
 }
@@ -288,9 +290,7 @@ const initializeAuthors = async () => {
 const initializeBooks = async () => {
   if ((await Book.find({})).length === 0) {
     for (const book of books) {
-      const author = await Author.findOne({name: book.author})
-      const newBook = new Book({...book, author: author, id: undefined})
-      await newBook.save()
+      await resolvers.Mutation.addBook(null, book, {currentUser: true})
     }
   }
 }
