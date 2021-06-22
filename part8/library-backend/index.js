@@ -1,5 +1,5 @@
 require("dotenv").config()
-const { ApolloServer, gql, UserInputError } = require("apollo-server")
+const { ApolloServer, gql, UserInputError, AuthenticationError } = require("apollo-server")
 const jwt = require("jsonwebtoken")
 const mongoose = require("mongoose")
 
@@ -174,8 +174,13 @@ const resolvers = {
 
       return author
     },
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new AuthenticationError("Invalid token")
+      }
+
       let author = await Author.findOne({name: args.author})
+
       if (!author) {
         author = new Author({name: args.author})
 
@@ -199,8 +204,13 @@ const resolvers = {
       
       return book
     },
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, context) => {
+      if (!context.currentUser) {
+        throw new AuthenticationError("Invalid token")
+      }
+
       const author = await Author.findOne({name: args.name})
+
       if (!author) {
         return null
       }
