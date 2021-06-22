@@ -17,7 +17,7 @@ const Recommend = (props) => {
     }
   }, [favoriteGenre.data])
 
-  if (favoriteGenre.loading || props.books.loading) {
+  if (favoriteGenre.loading || props.books.loading || !favoriteGenre.data) {
     return (
       <div>
         Loading recommendations
