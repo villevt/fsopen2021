@@ -44,7 +44,8 @@ const App = ({onLogout, onBookAdded, onGenreFilterChanged}) => {
   const handleGenreFilterChange = genreFilter => {
     setGenreFilter(genreFilter)
     onGenreFilterChanged(genreFilter)
-    books.refetch()
+    console.log("refech")
+    books.refetch({variables: {genre: genreFilter}})
   }
 
   return (

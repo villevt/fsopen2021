@@ -155,9 +155,10 @@ const resolvers = {
     bookCount: async () => (await Book.find({})).length,
     allBooks: async (root, args) => {
       if (args.genre) {
+        console.log("yes")
         return await Book.find({genres: {$in: args.genre}}).populate("author")
       } else {
-        return await await Book.find().populate("author")
+        return await Book.find().populate("author")
       }
     },
     authorCount: async () => (await Author.find({})).length,

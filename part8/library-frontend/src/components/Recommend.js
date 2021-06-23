@@ -17,6 +17,12 @@ const Recommend = (props) => {
     }
   }, [favoriteGenre.data])
 
+  useEffect(() => {
+    if (favoriteGenre.data) {
+      props.onGenreFilterChanged(favoriteGenre.data.me.favoriteGenre)
+    }
+  }, [props.show])
+
   if (favoriteGenre.loading || props.books.loading || !favoriteGenre.data) {
     return (
       <div>
