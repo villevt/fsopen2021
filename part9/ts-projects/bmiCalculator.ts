@@ -1,7 +1,3 @@
-
-/*
-
-*/
 const calculateBmi = (cm: number, kg: number): string => {
   if (isNaN(cm) || isNaN(kg)) {
     throw new Error("cm and kg need to be valid numbers")
