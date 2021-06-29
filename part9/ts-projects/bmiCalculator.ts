@@ -23,8 +23,12 @@ const calculateBmi = (cm: number, kg: number): string => {
   }
 }
 
-try {
-  console.log(calculateBmi(parseInt(process.argv[2]), parseInt(process.argv[3])))
-} catch(error) {
-  console.error(error)
+if (require.main === module) {
+  try {
+    console.log(calculateBmi(parseInt(process.argv[2]), parseInt(process.argv[3])))
+  } catch(error) {
+    console.error(error)
+  }
 }
+
+export default calculateBmi

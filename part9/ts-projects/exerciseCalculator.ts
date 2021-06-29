@@ -32,11 +32,15 @@ const calculateExercises = (exercises: number[], target: number): ExercisePerfor
   }
 }
 
-const target = parseInt(process.argv[2])
-const exercises = process.argv.splice(3, process.argv.length).map(e => parseFloat(e))
+if (require.main === module) {
+  const target = parseInt(process.argv[2])
+  const exercises = process.argv.splice(3, process.argv.length).map(e => parseFloat(e))
 
-try {
-  console.log(calculateExercises(exercises, target))
-} catch(error) {
-  console.log(error)
+  try {
+    console.log(calculateExercises(exercises, target))
+  } catch(error) {
+    console.log(error)
+  }
 }
+
+export default calculateExercises
