@@ -3,6 +3,10 @@
 
 */
 const calculateBmi = (cm: number, kg: number): string => {
+  if (isNaN(cm) || isNaN(kg)) {
+    throw new Error("cm and kg need to be valid numbers")
+  }
+
   const bmi = kg / ((cm / 100) ** 2)
   if (bmi < 15) {
     return "Very severely underweight"
@@ -23,4 +27,8 @@ const calculateBmi = (cm: number, kg: number): string => {
   }
 }
 
-console.log(calculateBmi(180, 74))
+try {
+  console.log(calculateBmi(parseInt(process.argv[2]), parseInt(process.argv[3])))
+} catch(error) {
+  console.error(error)
+}
