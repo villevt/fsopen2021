@@ -8,9 +8,12 @@ interface ExercisePerformance {
   average: number
 }
 
-const calculateExercises = (exercises: number[]): ExercisePerformance => {
-  const target = 2
-  const average = exercises.reduce((acc, val) => acc + val) / exercises.length
+const calculateExercises = (exercises: number[], target: number): ExercisePerformance => {
+  if (isNaN(target)) {
+    throw new Error("Target needs to be defined")
+  }
+
+  const average = exercises.length > 0 ? exercises.reduce((acc, val) => acc + val) / exercises.length : 0
   const rating = average < target / 2 ? 1 : average >= target ? 3 : 2
   const ratingDescription = rating === 1 
     ? "You can do better"
@@ -29,4 +32,11 @@ const calculateExercises = (exercises: number[]): ExercisePerformance => {
   }
 }
 
-console.log(calculateExercises([1, 3, 2, 0, 4, 3, 0, 0, 0, 1]))
+const target = parseInt(process.argv[2])
+const exercises = process.argv.splice(3, process.argv.length).map(e => parseFloat(e))
+
+try {
+  console.log(calculateExercises(exercises, target))
+} catch(error) {
+  console.log(error)
+}
