@@ -10,16 +10,16 @@ interface ExercisePerformance {
 
 const calculateExercises = (exercises: number[], target: number): ExercisePerformance => {
   if (isNaN(target)) {
-    throw new Error("Target needs to be defined")
+    throw new Error("Target needs to be defined");
   }
 
-  const average = exercises.length > 0 ? exercises.reduce((acc, val) => acc + val) / exercises.length : 0
-  const rating = average < target / 2 ? 1 : average >= target ? 3 : 2
+  const average = exercises.length > 0 ? exercises.reduce((acc, val) => acc + val) / exercises.length : 0;
+  const rating = average < target / 2 ? 1 : average >= target ? 3 : 2;
   const ratingDescription = rating === 1 
     ? "You can do better"
     : rating === 2
     ? "You're getting close"
-    : "Splendid!"
+    : "Splendid!";
 
   return {
     periodLength: exercises.length,
@@ -29,18 +29,18 @@ const calculateExercises = (exercises: number[], target: number): ExercisePerfor
     ratingDescription,
     target,
     average,    
-  }
-}
+  };
+};
 
 if (require.main === module) {
-  const target = parseInt(process.argv[2])
-  const exercises = process.argv.splice(3, process.argv.length).map(e => parseFloat(e))
+  const target = parseInt(process.argv[2]);
+  const exercises = process.argv.splice(3, process.argv.length).map(e => parseFloat(e));
 
   try {
-    console.log(calculateExercises(exercises, target))
+    console.log(calculateExercises(exercises, target));
   } catch(error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
-export default calculateExercises
+export default calculateExercises;
