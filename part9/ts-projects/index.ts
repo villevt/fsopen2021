@@ -1,6 +1,8 @@
 import express from "express";
+import { Interface } from "readline";
 
 import calculateBmi from "./bmiCalculator";
+import calculateExercises from "./exerciseCalculator";
 
 const app = express();
 
@@ -18,6 +20,12 @@ app.get("/bmi", (req, res) => {
   } catch(error) {
     res.json({error: "malformatted parameters"});
   }
+});
+
+app.post("/exercises", (req, res) => {
+  const daily_exercises = Array.isArray(req.query.daily_exercises) && req.query.daily_exercises.every(e => e);
+    ? 
+  calculateExercises(daily_exercises, query.target);
 });
 
 app.listen(3002, () => {
