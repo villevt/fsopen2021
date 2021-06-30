@@ -1,6 +1,6 @@
 import {v4 as uuid} from "uuid";
 
-import { Patient, NewPatient } from "../types";
+import { Gender, Patient, NewPatient } from "../types";
 import patients from "../data/patients.json";
 
 const getAll = (): Omit<Patient, "ssn">[] => {
@@ -8,7 +8,7 @@ const getAll = (): Omit<Patient, "ssn">[] => {
     id,
     name,
     dateOfBirth,
-    gender,
+    gender: gender as Gender,
     occupation
   }));
 };
