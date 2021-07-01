@@ -1,15 +1,13 @@
 import React from "react"
 
-type CoursePart = {
-  name: string,
-  exerciseCount: number
-}
+import Part from "./Part"
+import { CoursePart } from "../App"
 
 const Content = ({courseParts} : {courseParts: CoursePart[]}) => (
   <div>
     {courseParts.map((coursePart: CoursePart) => {
       return(
-        <p key={coursePart.name}>{coursePart.name} {coursePart.exerciseCount}</p>
+        <Part key={coursePart.name} coursePart={coursePart} />
       )
     })}
   </div>
