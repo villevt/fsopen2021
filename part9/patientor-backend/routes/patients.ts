@@ -18,4 +18,13 @@ router.post("/", (req, res) => {
   }
 });
 
+router.get("/:id", (req, res) => {
+  const patient = patientService.findById(req.params.id);
+  if (patient) {
+    res.json(patient);
+  } else {
+    res.status(400).json({error: "Invalid ID"});
+  }
+});
+
 export default router;

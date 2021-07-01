@@ -20,7 +20,8 @@ export const verifyPatient = ({name, dateOfBirth, ssn, gender, occupation}:Field
       dateOfBirth,
       ssn,
       gender: gender as Gender,
-      occupation
+      occupation,
+      entries: []
     });
   }
 };
