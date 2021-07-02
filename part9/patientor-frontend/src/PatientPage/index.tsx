@@ -14,7 +14,7 @@ const PatientPage = () => {
   const patient = patients[id];
 
   useEffect(() => {
-    if (!patient.ssn) {  
+    if (!patient || !patient.ssn) {  
       const fetchPatient = async () => {
         try {
           const {data: patientFromApi} = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
