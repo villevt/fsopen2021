@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Container, Divider, Icon } from "semantic-ui-react";
 
 import { apiBaseUrl } from "../constants";
-import { useStateValue } from "../state";
+import { updatePatient, useStateValue } from "../state";
 import { Patient } from "../types";
 
 const PatientPage = () => {
@@ -14,12 +14,11 @@ const PatientPage = () => {
   const patient = patients[id];
 
   useEffect(() => {
-    if (!patient.ssn) {
-      console.log("fetching");  
+    if (!patient.ssn) {  
       const fetchPatient = async () => {
         try {
           const {data: patientFromApi} = await axios.get<Patient>(`${apiBaseUrl}/patients/${id}`);
-          dispatch({type: "UPDATE_PATIENT", payload: patientFromApi});
+          dispatch(updatePatient(patientFromApi));
         } catch(error) {
           console.error(error);
         }
