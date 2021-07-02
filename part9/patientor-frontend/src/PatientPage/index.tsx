@@ -6,6 +6,7 @@ import { Container, Divider, Icon } from "semantic-ui-react";
 import { apiBaseUrl } from "../constants";
 import { updatePatient, useStateValue } from "../state";
 import { Patient } from "../types";
+import PatientEntry from "../components/PatientEntry";
 
 const PatientPage = () => {
   const {id} = useParams<{id: string}>();
@@ -48,6 +49,13 @@ const PatientPage = () => {
         ssn: {patient.ssn}
         <Divider />
         occupation: {patient.occupation}
+        <Divider />
+        <h3>Entries</h3>
+        {patient.entries.map(e => {
+          return (
+            <PatientEntry key={e.id} entry={e} />
+          );
+        })}
       </Container>
     </div>
   );
