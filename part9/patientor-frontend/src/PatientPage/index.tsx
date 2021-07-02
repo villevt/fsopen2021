@@ -6,7 +6,7 @@ import { Container, Divider, Icon } from "semantic-ui-react";
 import { apiBaseUrl } from "../constants";
 import { setDiagnosis, updatePatient, useStateValue } from "../state";
 import { Diagnosis, Patient } from "../types";
-import PatientEntry from "../components/PatientEntry";
+import EntryDetails from "../components/EntryDetails";
 
 const PatientPage = () => {
   const {id} = useParams<{id: string}>();
@@ -67,7 +67,7 @@ const PatientPage = () => {
         <h3>Entries</h3>
         {patient.entries.map(e => {
           return (
-            <PatientEntry key={e.id} entry={e} />
+            <EntryDetails key={e.id} entry={e} />
           );
         })}
       </Container>
