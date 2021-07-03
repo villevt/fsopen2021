@@ -68,9 +68,7 @@ const EntryDetails = ({entry} : {entry: Entry}) => {
           {employer}
         </Card.Header>
       </Card.Content>
-      <Card.Content description={entry.description}>
-        {entry.description}
-      </Card.Content>
+      <Card.Content description={entry.description} />
       {diagnosisList}
       {healthIcon}
     </Card>
