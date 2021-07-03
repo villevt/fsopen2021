@@ -1,6 +1,6 @@
 import {v4 as uuid} from "uuid";
 
-import { Patient, NewPatient } from "../types";
+import { Patient, NewPatient, Entry, UnionOmit } from "../types";
 import patientData from "../data/patients";
 
 const patients: Patient[] = patientData.map(({id, name, dateOfBirth, ssn, gender, occupation, entries}) => ({
@@ -34,10 +34,18 @@ const findById = (id: string): Patient | undefined => {
   return patients.find(e => e.id === id);
 };
 
+const addEntry = (patientId: string, entry: UnionOmit<Entry, "id">): Patient | undefined => {
+  const patient = patients.find(e => e.id === patientId);
+  const id = uuid();
+  patient?.entries.push({...entry, id});
+  return patient;
+};
+
 const patientService = {
   getAll,
   add,
-  findById
+  findById,
+  addEntry
 };
 
 export default patientService;
