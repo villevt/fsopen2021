@@ -12,11 +12,69 @@ router.get("/", (_req, res) => {
 });
 router.post("/", (req, res) => {
     try {
-        res.status(200).json(patient_1.verifyPatient(req.body));
+        if (patient_1.verifyPatient(req.body)) {
+            const { name, dateOfBirth, ssn, gender, occupation } = req.body;
+            const patient = patientService_1.default.add({
+                name,
+                dateOfBirth,
+                ssn,
+                gender,
+                occupation,
+                entries: []
+            });
+            res.status(200).json(patient);
+        }
     }
     catch (error) {
         const message = error.message;
         res.status(400).json({ error: message });
+    }
+});
+router.get("/:id", (req, res) => {
+    const patient = patientService_1.default.findById(req.params.id);
+    if (patient) {
+        res.json(patient);
+    }
+    else {
+        res.status(400).json({ error: "Invalid ID" });
+    }
+});
+router.post("/:id/entries", (req, res) => {
+    let patient = patientService_1.default.findById(req.params.id);
+    if (!patient) {
+        res.status(400).json({ error: "Invalid patient" });
+    }
+    else {
+        try {
+            if (patient_1.verifyEntry(req.body)) {
+                const { type, description, date, specialist, diagnosisCodes } = req.body;
+                switch (type) {
+                    case "Hospital":
+                        const { discharge } = req.body;
+                        patient = patientService_1.default.addEntry(patient.id, {
+                            type, description, date, specialist, diagnosisCodes, discharge
+                        });
+                        break;
+                    case "OccupationalHealthcare":
+                        const { employerName, sickLeave } = req.body;
+                        patient = patientService_1.default.addEntry(patient.id, {
+                            type, description, date, specialist, diagnosisCodes, employerName, sickLeave
+                        });
+                        break;
+                    case "HealthCheck":
+                        const { healthCheckRating } = req.body;
+                        patient = patientService_1.default.addEntry(patient.id, {
+                            type, description, date, specialist, diagnosisCodes, healthCheckRating
+                        });
+                        break;
+                }
+                res.status(200).json(patient);
+            }
+        }
+        catch (error) {
+            const message = error.message;
+            res.status(400).json({ error: message });
+        }
     }
 });
 exports.default = router;
