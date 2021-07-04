@@ -54,11 +54,15 @@ const PatientPage = () => {
   }
 
   const submitNewEntry = async (values: EntryFormValues) => {
-    console.log(values);
+    const copy = {...values};
+    if (copy.type === "OccupationalHealthcare" && copy.sickLeave?.startDate === "") {
+      delete copy.sickLeave;
+    }
+
     try {
       const { data: newEntry } = await axios.post<Entry>(
         `${apiBaseUrl}/patients/${id}/entries`,
-        values
+        copy
       );
       dispatch(addEntry(id, newEntry));
       setOpen(false);
