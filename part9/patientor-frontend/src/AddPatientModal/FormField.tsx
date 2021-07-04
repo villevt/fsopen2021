@@ -19,16 +19,19 @@ type SelectFieldProps = {
   name: string;
   label: string;
   options: GenderOption[] | TypeOption[];
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+  onChange?: (e: React.ChangeEvent<any>) => void;
 };
 
 export const SelectField = ({
   name,
   label,
-  options
+  options,
+  onChange
 }: SelectFieldProps) => (
   <Form.Field>
     <label>{label}</label>
-    <Field as="select" name={name} className="ui dropdown">
+    <Field as="select" name={name} className="ui dropdown" onChange={onChange}>
       {options.map((option: GenderOption | TypeOption) => (
         <option key={option.value} value={option.value}>
           {option.label || option.value}

@@ -31,11 +31,11 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) => {
   return (
     <Formik 
       initialValues={{
-        type: "Hospital",
         description: "",
         date: "",
         specialist: "",
         diagnosisCodes: [],
+        type: "Hospital",
         discharge: {
           date: "",
           criteria: "",
@@ -74,17 +74,73 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) => {
               delete errors.discharge;
             }
             break;
+          case "OccupationalHealthcare":
+            errors.sickLeave = {};
+            if (!values.employerName) {
+              errors.employerName = requiredError;
+            }
+            if (values.sickLeave?.startDate && isNaN(Date.parse(values.sickLeave.startDate))) {
+              errors.sickLeave.startDate = "Enter a valid date";
+            } else if (values.sickLeave?.startDate && !values.sickLeave.endDate) {
+              errors.sickLeave.endDate = "Both dates are required";
+            }
+            if (values.sickLeave?.endDate && isNaN(Date.parse(values.sickLeave.endDate))) {
+              errors.sickLeave.endDate = "Enter a valid date";
+            } else if (values.sickLeave?.endDate && !values.sickLeave.startDate) {
+              errors.sickLeave.startDate = "Both dates are required";
+            }
+            if (Object.keys(errors.sickLeave).length === 0) {
+              delete errors.sickLeave;
+            }
+            break;
         }
         return errors;
       }}
     >
-      {({values, dirty, isValid, setFieldValue, setFieldTouched}) => {
+      {({values, dirty, isValid, setFieldValue, setFieldTouched, resetForm}) => {
+        // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+        const typeChanged = (e: React.ChangeEvent<any>): void => {
+          switch (e.target.value) {
+            case "Hospital":
+              resetForm({
+                values: {
+                  description: values.description,
+                  date: values.date,
+                  specialist: values.specialist,
+                  diagnosisCodes: values.diagnosisCodes,
+                  type: "Hospital",
+                  discharge: {
+                    date: "",
+                    criteria: ""
+                  }
+                }
+              });
+              break;
+            case "OccupationalHealthcare":
+              resetForm({
+                values: {
+                  description: values.description,
+                  date: values.date,
+                  specialist: values.specialist,
+                  diagnosisCodes: values.diagnosisCodes,
+                  type: "OccupationalHealthcare",
+                  employerName: "",
+                  sickLeave: {
+                    startDate: "",
+                    endDate: ""
+                  }
+                }
+              });
+          }
+        };
+
         return(
           <Form className="form ui">
             <SelectField
                 label="Type of entry"
                 name="type"
                 options={typeOptions}
+                onChange={typeChanged}
             />
             <Field label="Description" name="description" placeholder="Description" component={TextField}/>
             <Field label="Date" name="date" placeholder="YYYY-MM-DD " component={TextField}/>
@@ -94,6 +150,15 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) => {
             }
             {values.type === EntryType.HospitalEntry &&
               <Field label="Discharge Criteria" name="discharge.criteria" placeholder="Discharge Criteria" component={TextField}/>
+            }
+            {values.type === EntryType.OccupationalHealthcareEntry && 
+              <Field label="Employer" name="employerName" placeholder="Employer" component={TextField}/>
+            }
+            {values.type === EntryType.OccupationalHealthcareEntry &&
+              <Field label="Sick Leave Start Date (Optional)" name="sickLeave.startDate" placeholder="YYYY-MM-DD" component={TextField}/>
+            }
+            {values.type === EntryType.OccupationalHealthcareEntry &&
+              <Field label="Sick Leave End Date (Optional)" name="sickLeave.endDate" placeholder="YYYY-MM-DD" component={TextField}/>
             }
             <Field label="Diagnosis Codes" name="diagnosisCodes" component={
               () => DiagnosisSelection({
