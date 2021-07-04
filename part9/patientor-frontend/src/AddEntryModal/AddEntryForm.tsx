@@ -2,7 +2,7 @@ import React from "react";
 import { Field, Formik } from "formik";
 import { Button, Form, Label, Segment } from "semantic-ui-react";
 
-import { DiagnosisSelection, SelectField, TextField, TypeOption } from "../AddPatientModal/FormField";
+import { DiagnosisSelection, NumberField, SelectField, TextField, TypeOption } from "../AddPatientModal/FormField";
 import { Entry, EntryType, UnionOmit } from "../types";
 import { useStateValue } from "../state";
 
@@ -93,6 +93,11 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) => {
               delete errors.sickLeave;
             }
             break;
+          case "HealthCheck":
+            if (values.healthCheckRating == null) {
+              errors.healthCheckRating = requiredError;
+            }
+            break;
         }
         return errors;
       }}
@@ -131,6 +136,18 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) => {
                   }
                 }
               });
+              break;
+            case "HealthCheck":
+              resetForm({
+                values: {
+                  description: values.description,
+                  date: values.date,
+                  specialist: values.specialist,
+                  diagnosisCodes: values.diagnosisCodes,
+                  type: "HealthCheck",
+                  healthCheckRating: 0
+                }
+              });
           }
         };
 
@@ -159,6 +176,9 @@ const AddEntryForm = ({onCancel, onSubmit}: Props) => {
             }
             {values.type === EntryType.OccupationalHealthcareEntry &&
               <Field label="Sick Leave End Date (Optional)" name="sickLeave.endDate" placeholder="YYYY-MM-DD" component={TextField}/>
+            }
+            {values.type === EntryType.HealthCheckEntry &&
+              <Field label="Health Rating | 0: Healthy | 1: Low Risk | 2: High Risk | 3: Critical Risk" name="healthCheckRating" min={0} max={3} component={NumberField}/>
             }
             <Field label="Diagnosis Codes" name="diagnosisCodes" component={
               () => DiagnosisSelection({
