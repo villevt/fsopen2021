@@ -19,15 +19,8 @@ export const verifyPatient = (patient:Fields):patient is Patient => {
   }
 };
 
-const isDiagnose = (diagnose: unknown): diagnose is Diagnose => {
-  return diagnose != null && typeof(diagnose) === "object" 
-    && (diagnose as Diagnose).code != null && typeof((diagnose as Diagnose).code) === "string"
-    && (diagnose as Diagnose).name != null && typeof((diagnose as Diagnose).name) === "string"
-    && (diagnose as Diagnose).latin == null || typeof((diagnose as Diagnose).latin) === "string";
-};
-
 const isDiagnosisCodes = (diagnosisCodes: unknown): diagnosisCodes is Array<Diagnose['code']> => {
-  return Array.isArray(diagnosisCodes) && diagnosisCodes.every(isDiagnose);
+  return Array.isArray(diagnosisCodes) && diagnosisCodes.every(e => typeof(e) === "string");
 };
 
 const isDischarge = (discharge: unknown): discharge is Discharge => {
@@ -59,7 +52,7 @@ export const verifyEntry = (entry: EntryFields):entry is Entry => {
     throw new Error("Incorrect or missing date");
   } else if (!specialist || typeof(specialist) != "string") {
     throw new Error("Incorrect or missing specialist");
-  } else if (diagnosisCodes && isDiagnosisCodes(diagnosisCodes)) {
+  } else if (diagnosisCodes && !isDiagnosisCodes(diagnosisCodes)) {
     throw new Error("Incorrect diagnosis codes");
   }
 

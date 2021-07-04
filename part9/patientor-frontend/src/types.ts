@@ -1,8 +1,8 @@
-export type Diagnosis = {
+export interface Diagnosis {
   code: string;
   name: string;
   latin?: string;
-};
+}
 
 export enum Gender {
   Male = "male",
@@ -10,12 +10,18 @@ export enum Gender {
   Other = "other"
 }
 
+export enum EntryType {
+  HospitalEntry = "Hospital",
+  OccupationalHealthcareEntry = "OccupationalHealthcare",
+  HealthCheckEntry = "HealthCheck"
+}
+
 export interface BaseEntry {
   id: string;
   description: string;
   date: string;
   specialist: string;
-  diagnosisCodes?: Array<Diagnosis['code']>;
+  diagnosisCodes?: Array<Diagnosis["code"]>;
 }
 
 export type Discharge = {
@@ -51,6 +57,7 @@ export interface HealthCheckEntry extends BaseEntry {
   healthCheckRating: HealthCheckRating;
 }
 
+export type UnionOmit<T, K extends string | number | symbol> = T extends unknown ? Omit<T, K> : never;
 export type Entry = HospitalEntry | OccupationalHealthcareEntry | HealthCheckEntry;
 
 export interface Patient {

@@ -34,11 +34,11 @@ const findById = (id: string): Patient | undefined => {
   return patients.find(e => e.id === id);
 };
 
-const addEntry = (patientId: string, entry: UnionOmit<Entry, "id">): Patient | undefined => {
+const addEntry = (patientId: string, entry: UnionOmit<Entry, "id">): Entry | undefined => {
   const patient = patients.find(e => e.id === patientId);
   const id = uuid();
   patient?.entries.push({...entry, id});
-  return patient;
+  return {...entry, id};
 };
 
 const patientService = {

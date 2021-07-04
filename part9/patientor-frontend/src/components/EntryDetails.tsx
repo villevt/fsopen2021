@@ -20,9 +20,9 @@ const EntryDetails = ({entry} : {entry: Entry}) => {
   const diagnosisList = entry.diagnosisCodes
     ? <Card.Content>
         <ul className="ui list">
-          {entry.diagnosisCodes?.map(e => {
+          {entry.diagnosisCodes.map(e => {
             return (
-              <li key={e}>{e} {diagnosis[e]}</li>
+              <li key={e}>{e} {diagnosis.find(a => a.code === e)?.name}</li>
             );
           })}
         </ul>

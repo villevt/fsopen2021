@@ -5,7 +5,7 @@ import { Action } from "./reducer";
 
 export type State = {
   patients: { [id: string]: Patient };
-  diagnosis: { [code: string]: Diagnosis} | undefined;
+  diagnosis: Array<Diagnosis> | undefined;
 };
 
 const initialState: State = {
