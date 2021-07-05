@@ -24,14 +24,8 @@ const verifyPatient = (patient) => {
     }
 };
 exports.verifyPatient = verifyPatient;
-const isDiagnose = (diagnose) => {
-    return diagnose != null && typeof (diagnose) === "object"
-        && diagnose.code != null && typeof (diagnose.code) === "string"
-        && diagnose.name != null && typeof (diagnose.name) === "string"
-        && diagnose.latin == null || typeof (diagnose.latin) === "string";
-};
 const isDiagnosisCodes = (diagnosisCodes) => {
-    return Array.isArray(diagnosisCodes) && diagnosisCodes.every(isDiagnose);
+    return Array.isArray(diagnosisCodes) && diagnosisCodes.every(e => typeof (e) === "string");
 };
 const isDischarge = (discharge) => {
     return discharge != null && typeof (discharge) === "object"
@@ -60,7 +54,7 @@ const verifyEntry = (entry) => {
     else if (!specialist || typeof (specialist) != "string") {
         throw new Error("Incorrect or missing specialist");
     }
-    else if (diagnosisCodes && isDiagnosisCodes(diagnosisCodes)) {
+    else if (diagnosisCodes && !isDiagnosisCodes(diagnosisCodes)) {
         throw new Error("Incorrect diagnosis codes");
     }
     switch (type) {

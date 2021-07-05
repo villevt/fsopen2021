@@ -36,7 +36,7 @@ const addEntry = (patientId, entry) => {
     const patient = patients.find(e => e.id === patientId);
     const id = uuid_1.v4();
     patient === null || patient === void 0 ? void 0 : patient.entries.push(Object.assign(Object.assign({}, entry), { id }));
-    return patient;
+    return Object.assign(Object.assign({}, entry), { id });
 };
 const patientService = {
     getAll,

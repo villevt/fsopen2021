@@ -40,7 +40,7 @@ router.get("/:id", (req, res) => {
     }
 });
 router.post("/:id/entries", (req, res) => {
-    let patient = patientService_1.default.findById(req.params.id);
+    const patient = patientService_1.default.findById(req.params.id);
     if (!patient) {
         res.status(400).json({ error: "Invalid patient" });
     }
@@ -48,27 +48,28 @@ router.post("/:id/entries", (req, res) => {
         try {
             if (patient_1.verifyEntry(req.body)) {
                 const { type, description, date, specialist, diagnosisCodes } = req.body;
+                let entry;
                 switch (type) {
                     case "Hospital":
                         const { discharge } = req.body;
-                        patient = patientService_1.default.addEntry(patient.id, {
+                        entry = patientService_1.default.addEntry(patient.id, {
                             type, description, date, specialist, diagnosisCodes, discharge
                         });
                         break;
                     case "OccupationalHealthcare":
                         const { employerName, sickLeave } = req.body;
-                        patient = patientService_1.default.addEntry(patient.id, {
+                        entry = patientService_1.default.addEntry(patient.id, {
                             type, description, date, specialist, diagnosisCodes, employerName, sickLeave
                         });
                         break;
                     case "HealthCheck":
                         const { healthCheckRating } = req.body;
-                        patient = patientService_1.default.addEntry(patient.id, {
+                        entry = patientService_1.default.addEntry(patient.id, {
                             type, description, date, specialist, diagnosisCodes, healthCheckRating
                         });
                         break;
                 }
-                res.status(200).json(patient);
+                res.status(200).json(entry);
             }
         }
         catch (error) {
