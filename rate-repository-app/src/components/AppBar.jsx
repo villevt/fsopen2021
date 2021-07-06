@@ -8,6 +8,8 @@ import theme from '../theme';
 const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.primary,
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingTop: Constants.statusBarHeight,
   }
 });
@@ -15,7 +17,8 @@ const styles = StyleSheet.create({
 const AppBar = () => {
   return (
     <View style={styles.container}>
-      <AppBarTab text={"Repositories"}/>
+      <AppBarTab text={"Repositories"} to="/" />
+      <AppBarTab text={"Sign in"} to="/sign-in" />
     </View>
   );
 };
