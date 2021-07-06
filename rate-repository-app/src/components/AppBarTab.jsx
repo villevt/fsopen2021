@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
 
 const AppBarTab = ({text}) => (
   <Pressable style={styles.tab}>
-    <Text color="textSecondary" fontWeight="bold" fontSize="subheading">
+    <Text color="white" fontWeight="bold" fontSize="subheading">
       {text}
     </Text>
   </Pressable>
