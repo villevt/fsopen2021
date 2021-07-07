@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+
 const theme = {
   avatars: {
     small: {
@@ -19,7 +21,10 @@ const theme = {
     subheading: 16,
   },
   fonts: {
-    main: 'System',
+    main: Platform.select({
+      android: "Roboto",
+      ios: "Arial"
+    })
   },
   fontWeights: {
     normal: '400',
