@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
 });
 
 const RepositoryList = () => {
-  const repositories = useRepositories;
+  const {repositories} = useRepositories;
 
   const repositoryNodes = repositories
     ? repositories.edges.map(edge => edge.node)
