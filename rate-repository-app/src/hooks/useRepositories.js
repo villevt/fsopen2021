@@ -8,7 +8,7 @@ const useRepositories = () => {
     setLoading(true);
 
     // Replace the IP address part with your own IP address!
-    const response = await fetch('http://192.168.100.16:5000/api/repositories');
+    const response = await fetch('http://192.168.43.137:5000/api/repositories');
     const json = await response.json();
 
     setLoading(false);

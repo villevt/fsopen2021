@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/Kaltsoon/rate-repository-api#readme",
   "dependencies": {
+    "@apollo/client": "^3.3.21",
     "@koa/cors": "^3.0.0",
     "apollo-server": "^2.20.0",
     "apollo-server-koa": "^2.10.1",
@@ -44,7 +45,7 @@
     "dotenv": "^8.2.0",
     "es6-error": "^4.1.1",
     "esm": "^3.2.25",
-    "graphql": "^14.6.0",
+    "graphql": "^14.7.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.21.17",
     "koa": "^2.11.0",
