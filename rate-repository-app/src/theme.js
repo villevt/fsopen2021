@@ -11,7 +11,8 @@ const theme = {
     textSecondary: '#113323',
     white: "#ffffff",
     primary: '#51eda4',
-    secondary: "#ebedec"
+    secondary: "#ebedec",
+    error: "#b83a27"
   },
   fontSizes: {
     body: 14,

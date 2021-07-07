@@ -8,10 +8,12 @@ import theme from "../theme";
 const styles = StyleSheet.create({
   form: {
     backgroundColor: theme.colors.white,
-    margin: 4
+    margin: 4,
+    padding: 8
   },
   input: {
-    margin: 4
+    marginTop: 4,
+    marginBottom: 4
   },
   button: {
     backgroundColor: theme.colors.primary,
