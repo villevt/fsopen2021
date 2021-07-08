@@ -12,13 +12,9 @@ const styles = StyleSheet.create({
 });
 
 const RepositoryList = () => {
-  const {repositories, loading} = useRepositories();
+  const {repositories} = useRepositories();
 
-  if (loading) {
-    return (
-      <Text>Loading repositories</Text>
-    );
-  }
+  console.log(repositories.edges);
 
   const repositoryNodes = repositories
     ? repositories.edges.map(edge => edge.node)
