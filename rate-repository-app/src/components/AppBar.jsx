@@ -4,6 +4,9 @@ import Constants from 'expo-constants';
 
 import AppBarTab from './AppBarTab';
 import theme from '../theme';
+import { useApolloClient, useQuery } from '@apollo/client';
+import { AUTHORIZED_USER } from '../graphql/queries';
+import useAuthStorage from '../hooks/useAuthStorage';
 
 const styles = StyleSheet.create({
   container: {
@@ -16,11 +19,23 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
+  const {data} = useQuery(AUTHORIZED_USER, {fetchPolicy: "network-only"});
+  const authStorage = useAuthStorage();
+  const apolloClient = useApolloClient();
+
+  const signOut = async () => {
+    await authStorage.removeAccessToken();
+    apolloClient.resetStore();
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal style={styles.scroll}>
         <AppBarTab text={"Repositories"} to="/" />
-        <AppBarTab text={"Sign in"} to="/sign-in" />
+        {data && data.authorizedUser
+          ? <AppBarTab text={"Sign out"} onPress={signOut} />
+          : <AppBarTab text={"Sign in"} to="/sign-in" />
+        }
       </ScrollView>
     </View>
   );
