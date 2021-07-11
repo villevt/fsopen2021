@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 });
 
 const RepositoryItem = ({item}) => (
-  <View style={styles.item}>
+  <View testID="repositoryItem" style={styles.item}>
     <View style={styles.itemUpper}>
       <View>
         <Image source={{uri: item.ownerAvatarUrl}} style={theme.avatars.small}/>

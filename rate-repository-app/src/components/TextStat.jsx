@@ -4,7 +4,7 @@ import { View } from "react-native";
 import Text from "./Text";
 
 const TextStat = ({number, text}) => (
-  <View>
+  <View testID="textStat">
     <Text fontWeight="bold">
       {number >= 1000 
         ? number % 1000 === 0 
