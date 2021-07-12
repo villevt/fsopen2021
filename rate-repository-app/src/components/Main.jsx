@@ -1,15 +1,14 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Switch, Route, useParams } from 'react-router-native';
-import { useLazyQuery } from '@apollo/client';
+import { Switch, Route } from 'react-router-native';
 
 import theme from '../theme';
 import AppBar from './AppBar';
 import RepositoryList from './RepositoryList';
 import RepositoryItem from './RepositoryItem';
 import SignIn from './SignIn';
-import { GET_REPOSITORY } from '../graphql/queries';
 import CreateReview from './CreateReview';
+import SignUp from './SignUp';
 
 const styles = StyleSheet.create({
   container: {
@@ -32,6 +31,9 @@ const Main = () => {
         </Route>
         <Route path="/sign-in" exact>
           <SignIn />
+        </Route>
+        <Route path="/sign-up" exact>
+          <SignUp />
         </Route>
         <Route path="/create-review" exact>
           <CreateReview />

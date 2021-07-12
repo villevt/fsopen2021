@@ -12,6 +12,19 @@ export const AUTHORIZE_USER = gql`
   }
 `;
 
+export const CREATE_USER = gql`
+  mutation ($username:String!,$password:String!) {
+    createUser(
+      user: {
+        username: $username,
+        password: $password
+      }
+    ) {
+      username
+    }
+  }
+`;
+
 export const CREATE_REVIEW = gql`
   mutation ($repositoryName:String!,$ownerName:String!,$rating:Int!,$text:String) {
     createReview (
@@ -25,4 +38,4 @@ export const CREATE_REVIEW = gql`
       repositoryId
     }
   }
-`
+`;

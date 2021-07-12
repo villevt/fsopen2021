@@ -73,7 +73,6 @@ const CreateReviewForm = ({onSubmit}) => (
 
 const CreateReview = () => {
   const [addReview] = useMutation(CREATE_REVIEW, {onCompleted: data => {
-    console.log(data);
     history.push(`repositories/${data.createReview.repositoryId}`);
   }})
   const history = useHistory()

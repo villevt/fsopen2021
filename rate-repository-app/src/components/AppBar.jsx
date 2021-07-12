@@ -31,12 +31,13 @@ const AppBar = () => {
   return (
     <View style={styles.container}>
       <ScrollView horizontal style={styles.scroll}>
-        <AppBarTab text={"Repositories"} to="/" />
-        {(data && data.authorizedUser) && <AppBarTab text={"Create a review"} to="/create-review" />}
+        <AppBarTab text="Repositories" to="/" />
+        {(data && data.authorizedUser) && <AppBarTab text="Create a review" to="/create-review" />}
         {data && data.authorizedUser
-          ? <AppBarTab text={"Sign out"} onPress={signOut} />
-          : <AppBarTab text={"Sign in"} to="/sign-in" />
+          ? <AppBarTab text="Sign out" onPress={signOut} />
+          : <AppBarTab text="Sign in" to="/sign-in" />
         }
+        {(!data || !data.authorizedUser) && <AppBarTab text="Sign up" to="/sign-up" />}
       </ScrollView>
     </View>
   );
