@@ -9,6 +9,7 @@ import RepositoryList from './RepositoryList';
 import RepositoryItem from './RepositoryItem';
 import SignIn from './SignIn';
 import { GET_REPOSITORY } from '../graphql/queries';
+import CreateReview from './CreateReview';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,6 +32,9 @@ const Main = () => {
         </Route>
         <Route path="/sign-in" exact>
           <SignIn />
+        </Route>
+        <Route path="/create-review" exact>
+          <CreateReview />
         </Route>
       </Switch>
     </View>
