@@ -21,17 +21,17 @@ const validationSchema = yup.object().shape({
   username: yup
     .string()
     .required("Username is required")
-    .min(1, message="Username should be at least 1 character long")
-    .max(30, message="Username cannot be longer than 30 characters"),
+    .min(1, "Username should be at least 1 character long")
+    .max(30, "Username cannot be longer than 30 characters"),
   password: yup
     .string()
     .required("Password is required")
-    .min(5, message="Password should be at least 5 characters long")
-    .max(50, message="Password should not be longer than 50 characters"),
+    .min(5, "Password should be at least 5 characters long")
+    .max(50, "Password should not be longer than 50 characters"),
   passwordConfirm: yup
     .string()
     .required("Password confirmation is required")
-    .oneOf([yup.ref("password")], message="Password confirmation needs to match password")
+    .oneOf([yup.ref("password")], "Password confirmation needs to match password")
 });
 
 const styles = StyleSheet.create({
@@ -70,7 +70,7 @@ const SignUpForm = ({onSubmit}) => (
 );
 
 const SignUp = () => {
-  const history = useHistory()
+  const history = useHistory();
   const [signIn] = useSignIn();
   const [password, setPassword] = useState("");
 
@@ -82,13 +82,13 @@ const SignUp = () => {
   const onSubmit = values => {
     setPassword(values.password);
     signUp({variables: {username: values.username, password: values.password}});
-  }
+  };
 
   return (
     <Formik onSubmit={onSubmit} initialValues={initialValues} validationSchema={validationSchema}>
       {({handleSubmit}) => <SignUpForm onSubmit={handleSubmit} />}
     </Formik>
-  )
-}
+  );
+};
 
 export default SignUp;

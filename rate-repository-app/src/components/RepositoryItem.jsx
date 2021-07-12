@@ -98,19 +98,19 @@ const ReviewItem = ({item}) => {
         </Text>
       </View>
     </View>
-  )
-}
+  );
+};
 
 const RepositoryInfo = ({item, singleView}) => {
   const history = useHistory();
 
   const openSingleView = () => {
     history.push(`/repositories/${item.id}`);
-  }
+  };
 
   const openGitHub = () => {
     WebBrowser.openBrowserAsync(item.url);
-  }
+  };
 
   return(
     <Pressable onPress={!singleView ? openSingleView : undefined} testID="repositoryItem" style={styles.item}>
@@ -145,7 +145,7 @@ const RepositoryInfo = ({item, singleView}) => {
       }
     </Pressable>
   );
-}
+};
 
 const RepositoryItem = ({item = {}}) => {
   const { id } = useParams();

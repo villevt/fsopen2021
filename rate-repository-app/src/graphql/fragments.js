@@ -12,4 +12,4 @@ export const REPOSITORY_FIELDS = gql`
     reviewCount,
     ratingAverage
   }
-`
+`;

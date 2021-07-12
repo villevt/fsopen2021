@@ -36,7 +36,7 @@ export const GET_REPOSITORY = gql`
       }
     }
   }
-`
+`;
 
 export const AUTHORIZED_USER = gql`
   query {

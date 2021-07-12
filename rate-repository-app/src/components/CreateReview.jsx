@@ -29,8 +29,8 @@ const validationSchema = yup.object().shape({
     .typeError("Rating should be a number")
     .integer("Rating should be a whole number")
     .required("Rating is required")
-    .min(0, message="Rating can't be smaller than 0")
-    .max(100, message="Rating can't be more than 100"),
+    .min(0, "Rating can't be smaller than 0")
+    .max(100, "Rating can't be more than 100"),
   text: yup
     .string()
 });
@@ -74,18 +74,18 @@ const CreateReviewForm = ({onSubmit}) => (
 const CreateReview = () => {
   const [addReview] = useMutation(CREATE_REVIEW, {onCompleted: data => {
     history.push(`repositories/${data.createReview.repositoryId}`);
-  }})
-  const history = useHistory()
+  }});
+  const history = useHistory();
 
   const onSubmit = values => {
     addReview({variables: {...values, rating: parseInt(values.rating)}});
-  }
+  };
 
   return (
     <Formik onSubmit={onSubmit} initialValues={initialValues} validationSchema={validationSchema}>
       {({handleSubmit}) => <CreateReviewForm onSubmit={handleSubmit} />}
     </Formik>
-  )
-}
+  );
+};
 
 export default CreateReview;
