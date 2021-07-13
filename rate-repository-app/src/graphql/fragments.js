@@ -14,6 +14,15 @@ export const REPOSITORY_FIELDS = gql`
   }
 `;
 
+export const REVIEW_FIELDS = gql`
+  fragment ReviewFields on Review {
+    id,
+    text,
+    rating,
+    createdAt
+  }
+`
+
 export const PAGE_INFO = gql`
   fragment PageInfo on PageInfo {
     endCursor,

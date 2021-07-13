@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
-  const {data} = useQuery(AUTHORIZED_USER, {fetchPolicy: "network-only"});
+  const {data, error} = useQuery(AUTHORIZED_USER, {fetchPolicy: "network-only"});
   const authStorage = useAuthStorage();
   const apolloClient = useApolloClient();
 
@@ -33,6 +33,7 @@ const AppBar = () => {
       <ScrollView horizontal style={styles.scroll}>
         <AppBarTab text="Repositories" to="/" />
         {(data && data.authorizedUser) && <AppBarTab text="Create a review" to="/create-review" />}
+        {(data && data.authorizedUser) && <AppBarTab text="My reviews" to ="/my-reviews" />}
         {data && data.authorizedUser
           ? <AppBarTab text="Sign out" onPress={signOut} />
           : <AppBarTab text="Sign in" to="/sign-in" />
