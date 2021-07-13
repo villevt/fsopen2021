@@ -23,15 +23,15 @@ const MyReviews = () => {
           first,
           after: data.authorizedUser.reviews.pageInfo.endCursor
         }
-      })
+      });
     }
-  }
+  };
 
   const handleReviewDeleted = () => {
     refetch({
       includeReviews: true,
       first
-    })
+    });
   };
 
   return (
@@ -41,7 +41,7 @@ const MyReviews = () => {
       onEndReachedThreshold={0.1}
       renderItem={({item}) => <ReviewItem item={item} handleReviewDeleted={handleReviewDeleted}/>}
     />
-  )
+  );
 };
 
 export default MyReviews;

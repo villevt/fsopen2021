@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
 
 export const ReviewItem = ({item, handleReviewDeleted}) => {
   const [deleteReview] = useMutation(DELETE_REVIEW);
-  const history = useHistory();
 
   const reviewDeleted = async () => {
     await deleteReview({variables: {id: item.id}});
@@ -198,7 +197,7 @@ const RepositoryInfo = ({item, singleView}) => {
 };
 
 const RepositoryItem = ({item = {}}) => {
-  const first = 8
+  const first = 8;
   const { id } = useParams();
   const { data, fetchMore, loading } = useQuery(GET_REPOSITORY, {
     fetchPolicy: "cache-and-network", 

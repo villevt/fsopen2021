@@ -21,7 +21,7 @@ export const REVIEW_FIELDS = gql`
     rating,
     createdAt
   }
-`
+`;
 
 export const PAGE_INFO = gql`
   fragment PageInfo on PageInfo {
@@ -29,4 +29,4 @@ export const PAGE_INFO = gql`
     startCursor,
     hasNextPage
   }
-`
+`;

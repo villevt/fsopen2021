@@ -46,4 +46,4 @@ export const DELETE_REVIEW = gql`
       id: $id
     )
   }
-`
+`;
