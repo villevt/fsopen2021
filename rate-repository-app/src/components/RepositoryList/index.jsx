@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, View, StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import { useDebounce } from "use-debounce";
 
 import useRepositories from '../../hooks/useRepositories';
 import RepositoryItem from "../RepositoryItem";
+import TextInput from '../TextInput';
 
 const styles = StyleSheet.create({
+  filter: {
+    borderRadius: 4,
+    paddingTop: 8,
+    paddingBottom: 8,
+    margin: 8
+  },
   picker: {
     marginLeft: 4
   },
@@ -13,6 +21,10 @@ const styles = StyleSheet.create({
     height: 10
   }
 });
+
+const RepositoryFilterer = ({filter, filterChanged}) => (
+  <TextInput onChangeText={filterChanged} value={filter} placeholder="Filter repositories" style={styles.filter}/>
+)
 
 const RepositoryOrderer = ({orderBy, orderByChanged}) => (
   <Picker
@@ -26,7 +38,14 @@ const RepositoryOrderer = ({orderBy, orderByChanged}) => (
   </Picker>
 );
 
-export const RepositoryListContainer = ({ orderBy, orderByChanged, repositories }) => {
+const ListHeader = ({orderBy, orderByChanged, filter, filterChanged}) => (
+  <View>
+    <RepositoryFilterer filter={filter} filterChanged={filterChanged} />
+    <RepositoryOrderer orderBy={orderBy} orderByChanged={orderByChanged}/>
+  </View>
+);
+
+export const RepositoryListContainer = ({ orderBy, orderByChanged, filter, filterChanged, repositories }) => {
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
     : [];
@@ -37,7 +56,7 @@ export const RepositoryListContainer = ({ orderBy, orderByChanged, repositories 
     <FlatList testID="repositoryList"
       data={repositoryNodes}
       ItemSeparatorComponent={separator}
-      ListHeaderComponent={<RepositoryOrderer orderBy={orderBy} orderByChanged={orderByChanged}/>}
+      ListHeaderComponent={<ListHeader orderBy={orderBy} orderByChanged={orderByChanged} filter={filter} filterChanged={filterChanged}/>}
       renderItem={({item}) => {
         return(
           <RepositoryItem item={item} />
@@ -49,6 +68,8 @@ export const RepositoryListContainer = ({ orderBy, orderByChanged, repositories 
 
 const RepositoryList = () => {
   const [orderBy, setOrderBy] = useState("CREATED_AT");
+  const [filter, setFilter] = useState("")
+  const [debouncedFilter] = useDebounce(filter, 500);
   const { repositories, refetch } = useRepositories();
 
   const orderByChanged = (itemValue) => {
@@ -60,7 +81,21 @@ const RepositoryList = () => {
     });
   };
 
-  return <RepositoryListContainer repositories={repositories} orderBy={orderBy} orderByChanged={orderByChanged}/>;
+  useEffect(() => {
+    refetch({searchKeyword: debouncedFilter})
+  }, [debouncedFilter])
+
+  const filterChanged = text => {
+    setFilter(text);
+  };
+
+  return <RepositoryListContainer 
+    repositories={repositories} 
+    orderBy={orderBy} 
+    orderByChanged={orderByChanged} 
+    filter={filter}
+    filterChanged={filterChanged}
+  />;
 };
 
 export default RepositoryList;
