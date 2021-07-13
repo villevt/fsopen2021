@@ -13,3 +13,11 @@ export const REPOSITORY_FIELDS = gql`
     ratingAverage
   }
 `;
+
+export const PAGE_INFO = gql`
+  fragment PageInfo on PageInfo {
+    endCursor,
+    startCursor,
+    hasNextPage
+  }
+`
