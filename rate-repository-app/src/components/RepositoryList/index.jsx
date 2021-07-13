@@ -45,7 +45,7 @@ const ListHeader = ({orderBy, orderByChanged, filter, filterChanged}) => (
   </View>
 );
 
-export const RepositoryListContainer = ({ orderBy, orderByChanged, filter, filterChanged, repositories }) => {
+export const RepositoryListContainer = ({ orderBy, orderByChanged, filter, filterChanged, repositories, onEndReach }) => {
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
     : [];
@@ -55,6 +55,8 @@ export const RepositoryListContainer = ({ orderBy, orderByChanged, filter, filte
   return (
     <FlatList testID="repositoryList"
       data={repositoryNodes}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
       ItemSeparatorComponent={separator}
       ListHeaderComponent={<ListHeader orderBy={orderBy} orderByChanged={orderByChanged} filter={filter} filterChanged={filterChanged}/>}
       renderItem={({item}) => {
@@ -70,10 +72,9 @@ const RepositoryList = () => {
   const [orderBy, setOrderBy] = useState("CREATED_AT");
   const [filter, setFilter] = useState("")
   const [debouncedFilter] = useDebounce(filter, 500);
-  const { repositories, refetch } = useRepositories();
+  const { repositories, refetch, fetchMore } = useRepositories({first: 8});
 
   const orderByChanged = (itemValue) => {
-    console.log(itemValue); 
     setOrderBy(itemValue);
     refetch({
       orderBy: (itemValue === "CREATED_AT" ? "CREATED_AT" : "RATING_AVERAGE"),
@@ -89,8 +90,13 @@ const RepositoryList = () => {
     setFilter(text);
   };
 
+  const onEndReach = () => {
+    fetchMore();
+  };
+
   return <RepositoryListContainer 
     repositories={repositories} 
+    onEndReach={onEndReach}
     orderBy={orderBy} 
     orderByChanged={orderByChanged} 
     filter={filter}
