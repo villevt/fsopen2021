@@ -71,7 +71,8 @@ export const AUTHORIZED_USER = gql`
           node {
             ...ReviewFields,
             repository {
-              name
+              name,
+              id
             }
           }
         },

@@ -7,7 +7,7 @@ import { ReviewItem } from "./RepositoryItem";
 
 const MyReviews = () => {
   const first = 8;
-  const {data, loading, fetchMore} = useQuery(AUTHORIZED_USER, {
+  const {data, loading, fetchMore, refetch} = useQuery(AUTHORIZED_USER, {
     variables: {
       includeReviews: true,
       first
@@ -27,12 +27,19 @@ const MyReviews = () => {
     }
   }
 
+  const handleReviewDeleted = () => {
+    refetch({
+      includeReviews: true,
+      first
+    })
+  };
+
   return (
     <FlatList 
       data={reviews}
       onEndReached={handleFetchMore}
       onEndReachedThreshold={0.1}
-      renderItem={({item}) => <ReviewItem item={item} />}
+      renderItem={({item}) => <ReviewItem item={item} handleReviewDeleted={handleReviewDeleted}/>}
     />
   )
 };

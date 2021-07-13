@@ -7,6 +7,7 @@ import theme from '../theme';
 import { useApolloClient, useQuery } from '@apollo/client';
 import { AUTHORIZED_USER } from '../graphql/queries';
 import useAuthStorage from '../hooks/useAuthStorage';
+import { useHistory } from 'react-router-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,13 +20,15 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
-  const {data, error} = useQuery(AUTHORIZED_USER, {fetchPolicy: "network-only"});
+  const {data} = useQuery(AUTHORIZED_USER, {fetchPolicy: "network-only"});
   const authStorage = useAuthStorage();
   const apolloClient = useApolloClient();
+  const history = useHistory();
 
   const signOut = async () => {
     await authStorage.removeAccessToken();
     apolloClient.resetStore();
+    history.push("/");
   };
 
   return (
